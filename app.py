@@ -1,5 +1,7 @@
 from flask import Flask
 import numpy as np
+import subprocess
+import os
 import cv2
 try:
     from PIL import Image
@@ -12,7 +14,11 @@ app = Flask(__name__)
  
 @app.route('/')
 def hello_whale():
-    img_rgb = cv2.imread('test1.jpg', cv2.IMREAD_UNCHANGED)
+    print("getting stream-url")
+    m3u8 = subprocess.getoutput("streamlink twitch.tv/scarra best --stream-url")
+    print(m3u8)
+    os.system('ffmpeg -i "{}" -vframes 10 -r 0.1 -f image2 output_%05d.jpg'.format(m3u8))
+    img_rgb = cv2.imread('output_00001.jpg', cv2.IMREAD_UNCHANGED)
     match_msq_tracker(img_rgb)
     match_quest_tracker(img_rgb)
     
