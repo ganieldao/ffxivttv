@@ -9,13 +9,24 @@ try:
 except ImportError:
     import Image
 import pytesseract
+
+class MatchVars:
+    def __init__(self, template, lower, upper, box):
+        self.template = template
+        self.lower = lower
+        self.upper = upper
+        self.box = box
   
 LOWER_RED = np.array([100,100,100])
 UPPER_RED = np.array([255,255,255])
-
 LOWER_YELLOW = np.array([15,20,100])
 UPPER_YELLOW = np.array([50,255,255])
-  
+
+MSQ_TRACKER_TEMPLATE = cv2.imread('msq_tracker.jpg', cv2.IMREAD_UNCHANGED)
+MSQ_ICON_TEMPLATE = cv2.imread('msq_icon.png', cv2.IMREAD_UNCHANGED)
+
+MSQ_TRACKER_MATCH_VARS = MatchVars(MSQ_TRACKER_TEMPLATE, LOWER_RED, UPPER_RED, ((MSQ_TRACKER_TEMPLATE.shape[0] + 10, 0), (MSQ_TRACKER_TEMPLATE.shape[0] + 215, MSQ_TRACKER_TEMPLATE.shape[1])))
+MSQ_ICON_MATCH_VARS = MatchVars(MSQ_ICON_TEMPLATE, LOWER_YELLOW, UPPER_YELLOW, ((-MSQ_ICON_TEMPLATE.shape[0] - 200, 0), (0, MSQ_ICON_TEMPLATE.shape[1])))
   
 app = Flask(__name__)
  
@@ -27,8 +38,8 @@ def hello_whale():
     #screenshot_stream(streamer)
     #img_rgb = cv2.imread('{}_0000{}.jpg'.format(streamer, num), cv2.IMREAD_UNCHANGED)
     img_rgb = cv2.imread('test5.jpg', cv2.IMREAD_UNCHANGED)
-    #match_msq_tracker_icon(img_rgb)
-    match_msq_icon(img_rgb)
+    match(img_rgb, MSQ_TRACKER_MATCH_VARS)
+    match(img_rgb, MSQ_ICON_MATCH_VARS)
     
     
 def screenshot_stream(streamer, num=6):
@@ -39,22 +50,19 @@ def screenshot_stream(streamer, num=6):
     os.system('ffmpeg -i "{}" -vframes {} -r 0.1 -qmin 1 -q:v 1 {}_%05d.jpg'.format(m3u8, num, streamer))
     
     
-def match_msq_tracker_icon(img_rgb):
+def match(img_rgb, match_vars):
     print("Matching msq tracker icon")
-    template_rgb = cv2.imread('msq_tracker.jpg', cv2.IMREAD_UNCHANGED)
-    (tH, tW) = template_rgb.shape[:2]
-    msq_box = ((tW + 10, 0), (tW + 215, tH))
     
     # Isolate red colors in image and template
-    img_res = isolate_color(img_rgb, LOWER_RED, UPPER_RED)
-    template_res = isolate_color(template_rgb, LOWER_RED, UPPER_RED)
+    img_res = isolate_color(img_rgb, match_vars.lower, match_vars.upper)
+    template_res = isolate_color(match_vars.template, match_vars.lower, match_vars.upper)
     
     # Multi-scale Template Matching
     (minVal, minLoc, r) = multiscale_template_match(img_res, template_res)
     
     # Using coords of msq icon, box the text
-    p1 = np.add((minLoc[0], minLoc[1]), msq_box[0])
-    p2 = np.add((minLoc[0], minLoc[1]), msq_box[1])
+    p1 = np.add((minLoc[0], minLoc[1]), match_vars.box[0])
+    p2 = np.add((minLoc[0], minLoc[1]), match_vars.box[1])
     p1 = (int(p1[0] * r), int(p1[1] * r))
     p2 = (int(p2[0] * r), int(p2[1] * r))
     
@@ -65,36 +73,7 @@ def match_msq_tracker_icon(img_rgb):
     cv2.rectangle(img_rgb, p1, p2, (0, 0, 255), 2)
     cv2.imshow("Image", img_rgb)
     cv2.waitKey(0)
-    
-    
-def match_msq_icon(img_rgb):
-    print("Matching msq tracker icon")
-    template_rgb = cv2.imread('msq_icon.png', cv2.IMREAD_UNCHANGED)
-    (iH, iW) = img_rgb.shape[:2]
-    (tH, tW) = template_rgb.shape[:2]
-    msq_box = ((-tW - 200, 0), (0, tH))
-    
-    # Isolate yellow colors in image and template
-    img_res = isolate_color(img_rgb, LOWER_YELLOW, UPPER_YELLOW)
-    template_res = isolate_color(template_rgb, LOWER_YELLOW, UPPER_YELLOW)
-    
-    # Multi-scale Template Matching
-    (minVal, minLoc, r) = multiscale_template_match(img_res, template_res)
-    
-    # Using coords of msq icon, box the text
-    p1 = np.add((minLoc[0], minLoc[1]), msq_box[0])
-    p2 = np.add((minLoc[0], minLoc[1]), msq_box[1])
-    p1 = (int(p1[0] * r), int(p1[1] * r))
-    p2 = (int(p2[0] * r), int(p2[1] * r))
-
-    cropped = img_rgb[p1[1]:p2[1], p1[0]:p2[0]]
-    quest_text = pytesseract.image_to_string(cropped).strip().lstrip().rstrip()
-    print("Text Parsed:", quest_text)
-
-    cv2.rectangle(img_rgb, p1, p2, (0, 0, 255), 2)
-    cv2.imshow("Image", img_rgb)
-    cv2.waitKey(0)
-
+   
 
 def isolate_color(img_rgb, lower, upper):
     img_hsv = cv2.cvtColor(np.asarray(img_rgb), cv2.COLOR_BGR2HSV)
