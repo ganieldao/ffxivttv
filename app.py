@@ -9,17 +9,48 @@ except ImportError:
     import Image
 import pytesseract
   
+LOWER_RED = np.array([100,100,100])
+UPPER_RED = np.array([255,255,255])
+  
+  
 app = Flask(__name__)
  
  
 @app.route('/')
 def hello_whale():
-    print("getting stream-url")
-    m3u8 = subprocess.getoutput("streamlink twitch.tv/Shiphtur best --stream-url")
-    print(m3u8)
-    os.system('ffmpeg -i "{}" -vframes 6 -r 0.1 -qmin 1 -q:v 1 output_%05d.jpg'.format(m3u8))
-    img_rgb = cv2.imread('output_00006.jpg', cv2.IMREAD_UNCHANGED)
+    #print("getting stream-url")
+    #m3u8 = subprocess.getoutput("streamlink twitch.tv/Shiphtur best --stream-url")
+    #print(m3u8)
+    #os.system('ffmpeg -i "{}" -vframes 6 -r 0.1 -qmin 1 -q:v 1 output_%05d.jpg'.format(m3u8))
+    img_rgb = cv2.imread('test1.jpg', cv2.IMREAD_UNCHANGED)
+    #img_rgb = cv2.imread('output_00006.jpg', cv2.IMREAD_UNCHANGED)
     match_msq_tracker_icon(img_rgb)
+    
+    
+def isolate_red(img_rgb):
+    img_hsv = cv2.cvtColor(np.asarray(img_rgb), cv2.COLOR_BGR2HSV)
+    img_mask = cv2.inRange(img_hsv, LOWER_RED, UPPER_RED)
+    return cv2.bitwise_and(img_hsv, img_hsv, mask=img_mask)
+    
+    
+# From pyimagesearch.com
+def multiscale_template_match(img, template):
+    (tH, tW) = template.shape[:2]
+    
+    found = None
+    for scale in np.linspace(0.2, 1.0, 20)[::-1]:
+        resized = resize(img, width = int(img.shape[1] * scale))
+        r = img.shape[1] / float(resized.shape[1])
+
+        if resized.shape[0] < tH or resized.shape[1] < tW:
+            break
+
+        result = cv2.matchTemplate(resized, template, cv2.TM_SQDIFF_NORMED)
+        (minVal, maxVal, minLoc, maxLoc) = cv2.minMaxLoc(result)
+
+        if found is None or minVal < found[0]:
+            found = (minVal, minLoc, r)
+    return found
     
     
 def match_msq_tracker_icon(img_rgb):
@@ -31,34 +62,11 @@ def match_msq_tracker_icon(img_rgb):
     msq_box = ((tW + 10, 0), (tW + 215, tH))
     
     # Isolate red colors in image and template
-    img_hsv = cv2.cvtColor(np.asarray(img_rgb), cv2.COLOR_BGR2HSV)
-    template_hsv = cv2.cvtColor(np.asarray(template_rgb), cv2.COLOR_BGR2HSV)
+    img_res = isolate_red(img_rgb)
+    template_res = isolate_red(template_rgb)
     
-    lower_red = np.array([100,100,100])
-    upper_red = np.array([255,255,255])
-    
-    img_mask = cv2.inRange(img_hsv, lower_red, upper_red)
-    template_mask = cv2.inRange(template_hsv, lower_red, upper_red)
-    
-    img_res = cv2.bitwise_and(img_hsv, img_hsv, mask=img_mask)
-    template_res = cv2.bitwise_and(template_hsv, template_hsv, mask=template_mask)
-    
-    # Multi-scale Template Matching (from pyimagesearch.com)
-    found = None
-    for scale in np.linspace(0.2, 1.0, 20)[::-1]:
-        resized = resize(img_res, width = int(img_res.shape[1] * scale))
-        r = img_res.shape[1] / float(resized.shape[1])
-
-        if resized.shape[0] < tH or resized.shape[1] < tW:
-            break
-
-        result = cv2.matchTemplate(resized, template_res, cv2.TM_SQDIFF_NORMED)
-        (minVal, maxVal, minLoc, maxLoc) = cv2.minMaxLoc(result)
-
-        if found is None or minVal < found[0]:
-            found = (minVal, minLoc, r)
-        
-    (minVal, minLoc, r) = found
+    # Multi-scale Template Matching
+    (minVal, minLoc, r) = multiscale_template_match(img_res, template_res)
     
     # Using coords of msq icon, box the text
     p1 = np.add((minLoc[0], minLoc[1]), msq_box[0])
@@ -74,10 +82,7 @@ def match_msq_tracker_icon(img_rgb):
     cv2.imshow("Image", img_rgb)
     cv2.waitKey(0)
     
-    
-    
-    
-    
+
 # From imutils
 def resize(image, width = None, height = None, inter = cv2.INTER_AREA):
     # initialize the dimensions of the image to be resized and grab the image size
