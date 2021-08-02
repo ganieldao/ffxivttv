@@ -1,1 +1,6 @@
+**/*.jpg
+**/*.png
+**/*.jpeg
 
+!**/msq_icon.png
+!**/msq_tracker.jpg
