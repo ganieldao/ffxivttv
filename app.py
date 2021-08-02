@@ -4,6 +4,7 @@ import subprocess
 import os
 import cv2
 import asyncio
+import json
 try:
     from PIL import Image
 except ImportError:
@@ -16,6 +17,9 @@ class MatchVars:
         self.lower = lower
         self.upper = upper
         self.box = box
+
+with open('quests_formatted.json') as f:
+    QUESTS = json.load(f)
   
 LOWER_RED = np.array([100,100,100])
 UPPER_RED = np.array([255,255,255])
@@ -38,8 +42,14 @@ def hello_whale():
     #screenshot_stream(streamer)
     #img_rgb = cv2.imread('{}_0000{}.jpg'.format(streamer, num), cv2.IMREAD_UNCHANGED)
     img_rgb = cv2.imread('test5.jpg', cv2.IMREAD_UNCHANGED)
-    match(img_rgb, MSQ_TRACKER_MATCH_VARS)
-    match(img_rgb, MSQ_ICON_MATCH_VARS)
+    quest_text = match(img_rgb, MSQ_TRACKER_MATCH_VARS)
+    if quest_text == None:
+        quest_text = match(img_rgb, MSQ_ICON_MATCH_VARS)
+        
+    if quest_text in QUESTS:
+        return QUESTS[quest_text]
+    else:
+        return "Unable to detect current quest"
     
     
 def screenshot_stream(streamer, num=6):
@@ -68,11 +78,14 @@ def match(img_rgb, match_vars):
     
     cropped = img_rgb[p1[1]:p2[1], p1[0]:p2[0]]
     quest_text = pytesseract.image_to_string(cropped).strip().lstrip().rstrip()
-    print("Text Parsed:", quest_text)
+    print("Text Parsed:[{}]".format(quest_text))
+    
+    if len(quest_text) > 0:
+        return quest_text
 
-    cv2.rectangle(img_rgb, p1, p2, (0, 0, 255), 2)
-    cv2.imshow("Image", img_rgb)
-    cv2.waitKey(0)
+    #cv2.rectangle(img_rgb, p1, p2, (0, 0, 255), 2)
+    #cv2.imshow("Image", img_rgb)
+    #cv2.waitKey(0)
    
 
 def isolate_color(img_rgb, lower, upper):
