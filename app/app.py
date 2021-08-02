@@ -35,8 +35,13 @@ MSQ_ICON_MATCH_VARS = MatchVars(MSQ_ICON_TEMPLATE, LOWER_YELLOW, UPPER_YELLOW, (
 app = Flask(__name__)
  
  
+@app.route('/')
+def root(): 
+    return "Up"
+ 
+ 
 @app.route('/test')
-def root():
+def test():
     streamer = request.args.get('streamer')
     if streamer == None:
         return "Provide streamer"
@@ -147,4 +152,5 @@ def resize(image, width = None, height = None, inter = cv2.INTER_AREA):
     
  
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)   
