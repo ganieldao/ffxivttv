@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, send_file
 import numpy as np
 import subprocess
 import os
@@ -35,13 +35,17 @@ MSQ_ICON_MATCH_VARS = MatchVars(MSQ_ICON_TEMPLATE, LOWER_YELLOW, UPPER_YELLOW, (
 app = Flask(__name__)
  
  
-@app.route('/')
-def hello_whale():
-    #streamer = "Shiphtur"
-    #num = 6
-    #screenshot_stream(streamer)
-    #img_rgb = cv2.imread('{}_0000{}.jpg'.format(streamer, num), cv2.IMREAD_UNCHANGED)
-    img_rgb = cv2.imread('test5.jpg', cv2.IMREAD_UNCHANGED)
+@app.route('/test')
+def root():
+    streamer = request.args.get('streamer')
+    if streamer == None:
+        return "Provide streamer"
+    
+    num = 6
+    screenshot_stream(streamer, num)
+    # TODO format number 0's
+    img_file = '{}_0000{}.jpg'.format(streamer, num)
+    img_rgb = cv2.imread(img_file, cv2.IMREAD_UNCHANGED)
     quest_text = match(img_rgb, MSQ_TRACKER_MATCH_VARS)
     if quest_text == None:
         quest_text = match(img_rgb, MSQ_ICON_MATCH_VARS)
@@ -49,19 +53,22 @@ def hello_whale():
     if quest_text in QUESTS:
         return QUESTS[quest_text]
     else:
-        return "Unable to detect current quest"
+        return send_file(img_file, mimetype='image/jpeg')
     
     
 def screenshot_stream(streamer, num=6):
     os.system('rm {}*.jpg'.format(streamer))
-    print("getting stream-url")
+    print("getting stream-url", flush=True)
     m3u8 = subprocess.getoutput("streamlink twitch.tv/{} best --stream-url".format(streamer))
-    print(m3u8)
-    os.system('ffmpeg -i "{}" -vframes {} -r 0.1 -qmin 1 -q:v 1 {}_%05d.jpg'.format(m3u8, num, streamer))
+    print(m3u8, flush=True)
+    ffmpeg_cmd = 'ffmpeg -i "{}" -hide_banner -loglevel error -vframes {} -r 0.1 {}_%05d.jpg'.format(m3u8, num, streamer)
+    print(ffmpeg_cmd, flush=True)
+    subprocess.call(ffmpeg_cmd, shell=True)
     
     
 def match(img_rgb, match_vars):
-    print("Matching msq tracker icon")
+    print("Matching msq tracker icon", flush=True)
+    (iH, iW) = img_rgb.shape[:2]
     
     # Isolate red colors in image and template
     img_res = isolate_color(img_rgb, match_vars.lower, match_vars.upper)
@@ -73,12 +80,13 @@ def match(img_rgb, match_vars):
     # Using coords of msq icon, box the text
     p1 = np.add((minLoc[0], minLoc[1]), match_vars.box[0])
     p2 = np.add((minLoc[0], minLoc[1]), match_vars.box[1])
-    p1 = (int(p1[0] * r), int(p1[1] * r))
-    p2 = (int(p2[0] * r), int(p2[1] * r))
+    p1 = (max(0, int(p1[0] * r)), max(0, int(p1[1] * r)))
+    p2 = (min(iW - 1, int(p2[0] * r)), min(iH - 1, int(p2[1] * r)))
+    print(p1, p2, flush=True)
     
     cropped = img_rgb[p1[1]:p2[1], p1[0]:p2[0]]
     quest_text = pytesseract.image_to_string(cropped).strip().lstrip().rstrip()
-    print("Text Parsed:[{}]".format(quest_text))
+    print("Text Parsed:[{}]".format(quest_text), flush=True)
     
     if len(quest_text) > 0:
         return quest_text
@@ -139,5 +147,4 @@ def resize(image, width = None, height = None, inter = cv2.INTER_AREA):
     
  
 if __name__ == '__main__':
-    print(hello_whale())
-    #app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0')
