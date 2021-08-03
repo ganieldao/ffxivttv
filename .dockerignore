@@ -2,5 +2,7 @@
 **/*.png
 **/*.jpeg
 
+.env
+
 !**/msq_icon.png
 !**/msq_tracker.jpg

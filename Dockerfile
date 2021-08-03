@@ -17,4 +17,4 @@ RUN echo $PATH
 
 EXPOSE 5000
 
-CMD gunicorn main:app
+CMD gunicorn main:app -b 0.0.0.0:$PORT

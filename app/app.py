@@ -152,5 +152,6 @@ def resize(image, width = None, height = None, inter = cv2.INTER_AREA):
     
  
 if __name__ == '__main__':
+    print("ClientID", os.environ['TWITCH_CLIENT_ID'], flush=True)
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)   
