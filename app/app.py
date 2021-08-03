@@ -71,7 +71,7 @@ def periodic_job():
                 try:
                     quest = get_quest(stream['user_login'])
                     if quest != None:
-                        streamer_progress[stream['user_login']] = quest
+                        streamer_progress[stream['user_login']] = {"quest": quest, "last_updated": datetime.datetime.utcnow()}
                 except:
                     print("error")
 
