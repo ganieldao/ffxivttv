@@ -1,6 +1,7 @@
 from flask import Flask, request, send_file
-import asyncio
+from apscheduler.schedulers.background import BackgroundScheduler
 import cv2
+import datetime
 import json
 import numpy as np
 import os
@@ -37,7 +38,16 @@ MSQ_TRACKER_MATCH_VARS = MatchVars(MSQ_TRACKER_TEMPLATE, LOWER_RED, UPPER_RED, (
 MSQ_ICON_MATCH_VARS = MatchVars(MSQ_ICON_TEMPLATE, LOWER_YELLOW, UPPER_YELLOW, (
     (-MSQ_ICON_TEMPLATE.shape[0] - 200, 0), (0, MSQ_ICON_TEMPLATE.shape[1])))
 
+GAME_NAME = "Final Fantasy XIV Online"
+
+streamer_progress = {"scarra": "", "asmongold": "",
+                     "starsmitten": "", "shiphtur": "", "jummychu": "", "esfandtv": ""}
+
 app = Flask(__name__)
+twitch = Twitch(os.environ['TWITCH_CLIENT_ID'], os.environ['TWITCH_SECRET'])
+twitch.authenticate_app([])
+
+is_running = False
 
 
 @app.route('/')
@@ -45,12 +55,29 @@ def root():
     return "Up"
 
 
-@app.route('/test')
-def test():
-    streamer = request.args.get('streamer')
-    if streamer == None:
-        return "Provide streamer"
+@app.route('/streamers')
+def streamers():
+    return streamer_progress
 
+
+def periodic_job():
+    print("Starting job", flush=True)
+    streams = twitch.get_streams(
+        user_login=list(streamer_progress.keys()))['data']
+    print(streams, flush=True)
+    if len(streams) > 0:
+        for stream in streams:
+            if stream['game_name'] == GAME_NAME:
+                try:
+                    quest = get_quest(stream['user_login'])
+                    if quest != None:
+                        streamer_progress[stream['user_login']] = quest
+                except:
+                    print("error")
+
+
+def get_quest(streamer):
+    print("Getting quest for", streamer, flush=True)
     num = 6
     screenshot_stream(streamer, num)
     # TODO format number 0's
@@ -62,8 +89,6 @@ def test():
 
     if quest_text in QUESTS:
         return QUESTS[quest_text]
-    else:
-        return send_file(img_file, mimetype='image/jpeg')
 
 
 def screenshot_stream(streamer, num=6):
@@ -157,6 +182,13 @@ def resize(image, width=None, height=None, inter=cv2.INTER_AREA):
     resized = cv2.resize(image, dim, interpolation=inter)
     # return the resized image
     return resized
+
+
+print("Started", flush=True)
+scheduler = BackgroundScheduler()
+job = scheduler.add_job(periodic_job, 'interval', minutes=10,
+                        next_run_time=datetime.datetime.utcnow())
+scheduler.start()
 
 
 if __name__ == '__main__':
