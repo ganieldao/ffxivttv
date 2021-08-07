@@ -41,7 +41,11 @@ MSQ_ICON_MATCH_VARS = MatchVars(MSQ_ICON_TEMPLATE, LOWER_YELLOW, UPPER_YELLOW, (
 GAME_NAME = "Final Fantasy XIV Online"
 
 streamer_progress = {"scarra": "", "asmongold": "",
-                     "starsmitten": "", "shiphtur": "", "jummychu": "", "esfandtv": ""}
+                     "starsmitten": "", "shiphtur": "", 
+                     "jummychu": "", "esfandtv": "", "potasticp": ""}
+
+last_ran = None
+last_finished = None
 
 app = Flask(__name__)
 twitch = Twitch(os.environ['TWITCH_CLIENT_ID'], os.environ['TWITCH_SECRET'])
@@ -57,14 +61,15 @@ def root():
 
 @app.route('/streamers')
 def streamers():
-    return streamer_progress
+    return {"streamers": streamer_progress, "last_ran": last_ran, "last_finished": last_finished}
 
 
 def periodic_job():
     print("Starting job", flush=True)
+    global last_ran 
+    last_ran = datetime.datetime.utcnow()
     streams = twitch.get_streams(
         user_login=list(streamer_progress.keys()))['data']
-    print(streams, flush=True)
     if len(streams) > 0:
         for stream in streams:
             if stream['game_name'] == GAME_NAME:
@@ -74,6 +79,8 @@ def periodic_job():
                         streamer_progress[stream['user_login']] = {"quest": quest, "last_updated": datetime.datetime.utcnow()}
                 except:
                     print("error")
+    global last_finished
+    last_finished = datetime.datetime.utcnow()
 
 
 def get_quest(streamer):
