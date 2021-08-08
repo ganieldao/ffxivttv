@@ -1,4 +1,3 @@
-from flask import Flask, request, send_file
 from apscheduler.schedulers.background import BackgroundScheduler
 import cv2
 import datetime
@@ -7,6 +6,7 @@ import numpy as np
 import os
 import pytesseract
 import subprocess
+from pymongo import MongoClient, errors
 from twitchAPI.twitch import Twitch
 try:
     from PIL import Image
@@ -47,21 +47,38 @@ streamer_progress = {"scarra": "", "asmongold": "",
 last_ran = None
 last_finished = None
 
-app = Flask(__name__)
 twitch = Twitch(os.environ['TWITCH_CLIENT_ID'], os.environ['TWITCH_SECRET'])
 twitch.authenticate_app([])
 
 is_running = False
 
+# use a try-except indentation to catch MongoClient() errors
+try:
+    # try to instantiate a client instance
+    client = MongoClient(
+        host = [ os.environ['MONGO_HOST'] + ":" + os.environ['MONGO_PORT'] ],
+        serverSelectionTimeoutMS = 3000, # 3 second timeout
+        username = os.environ['MONGO_INITDB_ROOT_USERNAME'],
+        password = os.environ['MONGO_INITDB_ROOT_PASSWORD'],
+    )
 
-@app.route('/')
-def root():
-    return "Up"
+    # print the version of MongoDB server if connection successful
+    print("server version:", client.server_info()["version"])
 
+    # get the database_names from the MongoClient()
+    database_names = client.list_database_names()
 
-@app.route('/streamers')
-def streamers():
-    return {"streamers": streamer_progress, "last_ran": last_ran, "last_finished": last_finished}
+    db = client['ffxivttvtracker']
+
+except errors.ServerSelectionTimeoutError as err:
+    # set the client and DB name list to 'None' and `[]` if exception
+    client = None
+    database_names = []
+
+    # catch pymongo.errors.ServerSelectionTimeoutError
+    print ("pymongo ERROR:", err)
+
+print("\ndatabases:", database_names)
 
 
 def periodic_job():
@@ -79,6 +96,7 @@ def periodic_job():
                         streamer_progress[stream['user_login']] = {"quest": quest, "last_updated": datetime.datetime.utcnow()}
                 except:
                     print("error")
+        #db.streamers.insert_one({"streamer": stream['user_login'], "quest": {"test":"test"}})
     global last_finished
     last_finished = datetime.datetime.utcnow()
 
@@ -91,7 +109,7 @@ def get_quest(streamer):
     img_file = '{}_0000{}.jpg'.format(streamer, num)
     img_rgb = cv2.imread(img_file, cv2.IMREAD_UNCHANGED)
     quest_text = match(img_rgb, MSQ_TRACKER_MATCH_VARS)
-    if quest_text == None:
+    if quest_text == None or quest_text not in QUESTS:
         quest_text = match(img_rgb, MSQ_ICON_MATCH_VARS)
 
     if quest_text in QUESTS:
@@ -191,13 +209,9 @@ def resize(image, width=None, height=None, inter=cv2.INTER_AREA):
     return resized
 
 
-print("Started", flush=True)
-scheduler = BackgroundScheduler()
-job = scheduler.add_job(periodic_job, 'interval', minutes=10,
-                        next_run_time=datetime.datetime.utcnow())
-scheduler.start()
-
-
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    print("Started", flush=True)
+    scheduler = BackgroundScheduler()
+    job = scheduler.add_job(periodic_job, 'interval', minutes=5,
+                            next_run_time=datetime.datetime.utcnow())
+    scheduler.start()
