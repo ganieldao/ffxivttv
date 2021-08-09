@@ -70,13 +70,13 @@ try:
 
     db = client['ffxivttvtracker']
 
-except errors.ServerSelectionTimeoutError as err:
+except:
     # set the client and DB name list to 'None' and `[]` if exception
     client = None
     database_names = []
 
     # catch pymongo.errors.ServerSelectionTimeoutError
-    print ("pymongo ERROR:", err)
+    print ("pymongo ERROR")
 
 print("\ndatabases:", database_names)
 
@@ -99,6 +99,7 @@ def periodic_job():
         #db.streamers.insert_one({"streamer": stream['user_login'], "quest": {"test":"test"}})
     global last_finished
     last_finished = datetime.datetime.utcnow()
+    print(streamer_progress, flush=True)
 
 
 def get_quest(streamer):
@@ -215,3 +216,5 @@ if __name__ == '__main__':
     job = scheduler.add_job(periodic_job, 'interval', minutes=5,
                             next_run_time=datetime.datetime.utcnow())
     scheduler.start()
+    while(True):
+        pass
