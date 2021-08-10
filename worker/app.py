@@ -8,6 +8,7 @@ import pytesseract
 import subprocess
 from pymongo import MongoClient, errors
 from twitchAPI.twitch import Twitch
+from streamlink import Streamlink
 try:
     from PIL import Image
 except ImportError:
@@ -40,7 +41,7 @@ MSQ_ICON_MATCH_VARS = MatchVars(MSQ_ICON_TEMPLATE, LOWER_YELLOW, UPPER_YELLOW, (
 
 GAME_NAME = "Final Fantasy XIV Online"
 
-streamer_progress = {"scarra": "", "asmongold": "",
+streamer_progress = {"scarra": "", "asmongold": "", "zackrawrr": "",
                      "starsmitten": "", "shiphtur": "", 
                      "jummychu": "", "esfandtv": "", "potasticp": ""}
 
@@ -49,6 +50,8 @@ last_finished = None
 
 twitch = Twitch(os.environ['TWITCH_CLIENT_ID'], os.environ['TWITCH_SECRET'])
 twitch.authenticate_app([])
+
+streamlink = Streamlink()
 
 is_running = False
 
@@ -120,8 +123,7 @@ def get_quest(streamer):
 def screenshot_stream(streamer, num=6):
     os.system('rm {}*.jpg'.format(streamer))
     print("getting stream-url", flush=True)
-    m3u8 = subprocess.getoutput(
-        "streamlink twitch.tv/{} best --stream-url".format(streamer))
+    m3u8 = streamlink.streams("twitch.tv/{}".format(streamer))["best"].url
     print(m3u8, flush=True)
     ffmpeg_cmd = 'ffmpeg -i "{}" -hide_banner -loglevel error -vframes {} -r 0.1 {}_%05d.jpg'.format(
         m3u8, num, streamer)
