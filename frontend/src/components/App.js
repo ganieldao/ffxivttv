@@ -8,8 +8,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import arr from './assets/images/arr.png';
-import heavensward from './assets/images/heavensward.png';
+import arr from '../assets/images/arr.png';
+import heavensward from '../assets/images/heavensward.png';
 
 const useStyles = makeStyles({
   table: {
