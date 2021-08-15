@@ -1,4 +1,3 @@
-from apscheduler.schedulers.background import BackgroundScheduler
 import cv2
 import datetime
 import json
@@ -6,6 +5,7 @@ import numpy as np
 import os
 import pytesseract
 import subprocess
+import time
 from pymongo import MongoClient, errors
 from twitchAPI.twitch import Twitch
 from streamlink import Streamlink
@@ -214,9 +214,7 @@ def resize(image, width=None, height=None, inter=cv2.INTER_AREA):
 
 if __name__ == '__main__':
     print("Started", flush=True)
-    scheduler = BackgroundScheduler()
-    job = scheduler.add_job(periodic_job, 'interval', minutes=5,
-                            next_run_time=datetime.datetime.utcnow())
-    scheduler.start()
     while(True):
+        periodic_job()
+        time.sleep(10)
         pass
