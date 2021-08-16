@@ -22,7 +22,6 @@ class MatchVars:
         self.upper = upper
         self.box = box
 
-
 with open('quests_formatted.json') as f:
     QUESTS = json.load(f)
 
@@ -41,9 +40,7 @@ MSQ_ICON_MATCH_VARS = MatchVars(MSQ_ICON_TEMPLATE, LOWER_YELLOW, UPPER_YELLOW, (
 
 GAME_NAME = "Final Fantasy XIV Online"
 
-streamer_progress = {"scarra": "", "asmongold": "", "zackrawrr": "",
-                     "starsmitten": "", "shiphtur": "", 
-                     "jummychu": "", "esfandtv": "", "potasticp": ""}
+streamer_progress = {}
 
 last_ran = None
 last_finished = None
@@ -55,15 +52,10 @@ streamlink = Streamlink()
 
 is_running = False
 
-# use a try-except indentation to catch MongoClient() errors
+global db
 try:
     # try to instantiate a client instance
-    client = MongoClient(
-        host = [ os.environ['MONGO_HOST'] + ":" + os.environ['MONGO_PORT'] ],
-        serverSelectionTimeoutMS = 3000, # 3 second timeout
-        username = os.environ['MONGO_INITDB_ROOT_USERNAME'],
-        password = os.environ['MONGO_INITDB_ROOT_PASSWORD'],
-    )
+    client = MongoClient(os.environ['MONGO_URI'])
 
     # print the version of MongoDB server if connection successful
     print("server version:", client.server_info()["version"])
@@ -72,14 +64,13 @@ try:
     database_names = client.list_database_names()
 
     db = client['ffxivttvtracker']
-
-except:
+except Exception as e:
     # set the client and DB name list to 'None' and `[]` if exception
     client = None
     database_names = []
 
     # catch pymongo.errors.ServerSelectionTimeoutError
-    print ("pymongo ERROR")
+    print ("pymongo ERROR", e)
 
 print("\ndatabases:", database_names)
 
@@ -88,8 +79,29 @@ def periodic_job():
     print("Starting job", flush=True)
     global last_ran 
     last_ran = datetime.datetime.utcnow()
-    streams = twitch.get_streams(
-        user_login=list(streamer_progress.keys()))['data']
+
+    streamer_logins = get_streamer_logins()
+    print("Logins", streamer_logins)
+    streams = twitch.get_streams(user_login=streamer_logins)['data']
+    process_streams(streams)
+  
+    global last_finished
+    last_finished = datetime.datetime.utcnow()
+    print(streamer_progress, flush=True)
+
+
+def get_streamer_logins():
+    if not db:
+        return []
+
+    streamer_logins = [x["user_login"] for x in db["streamers"].find({}, {"_id": 0, "user_login": 1})]
+    if not streamer_logins:
+        return list(streamer_progress.keys())
+
+    return streamer_logins
+
+
+def process_streams(streams):
     if len(streams) > 0:
         for stream in streams:
             if stream['game_name'] == GAME_NAME:
@@ -97,12 +109,10 @@ def periodic_job():
                     quest = get_quest(stream['user_login'])
                     if quest != None:
                         streamer_progress[stream['user_login']] = {"quest": quest, "last_updated": datetime.datetime.utcnow()}
+                        db["streamers"].find_one_and_update({"user_login": stream['user_login'].lower()}, 
+                            {"$set": {"quest": quest, "last_updated": datetime.datetime.utcnow()}})
                 except:
                     print("error")
-        #db.streamers.insert_one({"streamer": stream['user_login'], "quest": {"test":"test"}})
-    global last_finished
-    last_finished = datetime.datetime.utcnow()
-    print(streamer_progress, flush=True)
 
 
 def get_quest(streamer):
@@ -156,10 +166,6 @@ def match(img_rgb, match_vars):
 
     if len(quest_text) > 0:
         return quest_text
-
-    #cv2.rectangle(img_rgb, p1, p2, (0, 0, 255), 2)
-    #cv2.imshow("Image", img_rgb)
-    # cv2.waitKey(0)
 
 
 def isolate_color(img_rgb, lower, upper):
