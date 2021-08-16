@@ -111,16 +111,15 @@ def process_streams(streams):
                         streamer_progress[stream['user_login']] = {"quest": quest, "last_updated": datetime.datetime.utcnow()}
                         db["streamers"].find_one_and_update({"user_login": stream['user_login'].lower()}, 
                             {"$set": {"quest": quest, "last_updated": datetime.datetime.utcnow()}})
-                except:
-                    print("error")
+                except Exception as e:
+                    print("error", e)
 
 
 def get_quest(streamer):
     print("Getting quest for", streamer, flush=True)
-    num = 6
+    num = 8
     screenshot_stream(streamer, num)
-    # TODO format number 0's
-    img_file = '{}_0000{}.jpg'.format(streamer, num)
+    img_file = '{}_{}.jpg'.format(streamer, num)
     img_rgb = cv2.imread(img_file, cv2.IMREAD_UNCHANGED)
     quest_text = match(img_rgb, MSQ_TRACKER_MATCH_VARS)
     if quest_text == None or quest_text not in QUESTS:
@@ -135,7 +134,7 @@ def screenshot_stream(streamer, num=6):
     print("getting stream-url", flush=True)
     m3u8 = streamlink.streams("twitch.tv/{}".format(streamer))["best"].url
     print(m3u8, flush=True)
-    ffmpeg_cmd = 'ffmpeg -i "{}" -hide_banner -loglevel error -vframes {} -r 0.1 {}_%05d.jpg'.format(
+    ffmpeg_cmd = 'ffmpeg -i "{}" -hide_banner -loglevel error -vframes {} -r 0.1 {}_%d.jpg'.format(
         m3u8, num, streamer)
     print(ffmpeg_cmd, flush=True)
     subprocess.call(ffmpeg_cmd, shell=True)
