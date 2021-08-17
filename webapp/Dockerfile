@@ -1,6 +1,6 @@
 FROM node:8
 
-WORKDIR /usr/src/backend
+WORKDIR /usr/src/webapp
 
 COPY package*.json ./
 
@@ -8,5 +8,5 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 8080
+EXPOSE $PORT
 CMD [ "npm", "start" ]
