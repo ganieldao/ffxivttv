@@ -2,6 +2,8 @@
 **/*.png
 **/*.jpeg
 
+**/build
+**/node_modules
 .env
 
 !**/msq_icon.png
