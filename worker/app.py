@@ -1,5 +1,3 @@
-from flask import Flask, request, send_file
-from apscheduler.schedulers.background import BackgroundScheduler
 import cv2
 import datetime
 import json
@@ -7,7 +5,10 @@ import numpy as np
 import os
 import pytesseract
 import subprocess
+import time
+from pymongo import MongoClient, errors
 from twitchAPI.twitch import Twitch
+from streamlink import Streamlink
 try:
     from PIL import Image
 except ImportError:
@@ -20,7 +21,6 @@ class MatchVars:
         self.lower = lower
         self.upper = upper
         self.box = box
-
 
 with open('quests_formatted.json') as f:
     QUESTS = json.load(f)
@@ -40,36 +40,68 @@ MSQ_ICON_MATCH_VARS = MatchVars(MSQ_ICON_TEMPLATE, LOWER_YELLOW, UPPER_YELLOW, (
 
 GAME_NAME = "Final Fantasy XIV Online"
 
-streamer_progress = {"scarra": "", "asmongold": "",
-                     "starsmitten": "", "shiphtur": "", 
-                     "jummychu": "", "esfandtv": "", "potasticp": ""}
+streamer_progress = {}
 
 last_ran = None
 last_finished = None
 
-app = Flask(__name__)
 twitch = Twitch(os.environ['TWITCH_CLIENT_ID'], os.environ['TWITCH_SECRET'])
 twitch.authenticate_app([])
 
+streamlink = Streamlink()
+
 is_running = False
 
+global db
+try:
+    # try to instantiate a client instance
+    client = MongoClient(os.environ['MONGO_URI'])
 
-@app.route('/')
-def root():
-    return "Up"
+    # print the version of MongoDB server if connection successful
+    print("server version:", client.server_info()["version"])
 
+    # get the database_names from the MongoClient()
+    database_names = client.list_database_names()
 
-@app.route('/streamers')
-def streamers():
-    return {"streamers": streamer_progress, "last_ran": last_ran, "last_finished": last_finished}
+    db = client['ffxivttvtracker']
+except Exception as e:
+    # set the client and DB name list to 'None' and `[]` if exception
+    client = None
+    database_names = []
+
+    # catch pymongo.errors.ServerSelectionTimeoutError
+    print ("pymongo ERROR", e)
+
+print("\ndatabases:", database_names)
 
 
 def periodic_job():
     print("Starting job", flush=True)
     global last_ran 
     last_ran = datetime.datetime.utcnow()
-    streams = twitch.get_streams(
-        user_login=list(streamer_progress.keys()))['data']
+
+    streamer_logins = get_streamer_logins()
+    print("Logins", streamer_logins)
+    streams = twitch.get_streams(user_login=streamer_logins)['data']
+    process_streams(streams)
+  
+    global last_finished
+    last_finished = datetime.datetime.utcnow()
+    print(streamer_progress, flush=True)
+
+
+def get_streamer_logins():
+    if not db:
+        return []
+
+    streamer_logins = [x["user_login"] for x in db["streamers"].find({}, {"_id": 0, "user_login": 1})]
+    if not streamer_logins:
+        return list(streamer_progress.keys())
+
+    return streamer_logins
+
+
+def process_streams(streams):
     if len(streams) > 0:
         for stream in streams:
             if stream['game_name'] == GAME_NAME:
@@ -77,35 +109,33 @@ def periodic_job():
                     quest = get_quest(stream['user_login'])
                     if quest != None:
                         streamer_progress[stream['user_login']] = {"quest": quest, "last_updated": datetime.datetime.utcnow()}
-                except:
-                    print("error")
-    global last_finished
-    last_finished = datetime.datetime.utcnow()
+                        db["streamers"].find_one_and_update({"user_login": stream['user_login'].lower()}, 
+                            {"$set": {"quest": quest, "last_updated": datetime.datetime.utcnow()}})
+                except Exception as e:
+                    print("error", e)
 
 
 def get_quest(streamer):
     print("Getting quest for", streamer, flush=True)
-    num = 6
-    screenshot_stream(streamer, num)
-    # TODO format number 0's
-    img_file = '{}_0000{}.jpg'.format(streamer, num)
+
+    screenshot_stream(streamer)
+    img_file = '{}.jpg'.format(streamer)
     img_rgb = cv2.imread(img_file, cv2.IMREAD_UNCHANGED)
     quest_text = match(img_rgb, MSQ_TRACKER_MATCH_VARS)
-    if quest_text == None:
+    if quest_text == None or quest_text not in QUESTS:
         quest_text = match(img_rgb, MSQ_ICON_MATCH_VARS)
 
     if quest_text in QUESTS:
         return QUESTS[quest_text]
 
 
-def screenshot_stream(streamer, num=6):
+def screenshot_stream(streamer):
     os.system('rm {}*.jpg'.format(streamer))
     print("getting stream-url", flush=True)
-    m3u8 = subprocess.getoutput(
-        "streamlink twitch.tv/{} best --stream-url".format(streamer))
+    m3u8 = streamlink.streams("twitch.tv/{}".format(streamer))["best"].url
     print(m3u8, flush=True)
-    ffmpeg_cmd = 'ffmpeg -i "{}" -hide_banner -loglevel error -vframes {} -r 0.1 {}_%05d.jpg'.format(
-        m3u8, num, streamer)
+    ffmpeg_cmd = 'ffmpeg -i "{}" -ss 00:00:40.00 -qscale:v 2 -hide_banner -loglevel error -vframes 1 {}.jpg'.format(
+        m3u8, streamer)
     print(ffmpeg_cmd, flush=True)
     subprocess.call(ffmpeg_cmd, shell=True)
 
@@ -135,10 +165,6 @@ def match(img_rgb, match_vars):
 
     if len(quest_text) > 0:
         return quest_text
-
-    #cv2.rectangle(img_rgb, p1, p2, (0, 0, 255), 2)
-    #cv2.imshow("Image", img_rgb)
-    # cv2.waitKey(0)
 
 
 def isolate_color(img_rgb, lower, upper):
@@ -191,13 +217,9 @@ def resize(image, width=None, height=None, inter=cv2.INTER_AREA):
     return resized
 
 
-print("Started", flush=True)
-scheduler = BackgroundScheduler()
-job = scheduler.add_job(periodic_job, 'interval', minutes=10,
-                        next_run_time=datetime.datetime.utcnow())
-scheduler.start()
-
-
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    print("Started", flush=True)
+    while(True):
+        periodic_job()
+        time.sleep(10)
+        pass

@@ -1,8 +1,29 @@
 version: "3.9"
 services:
-  web:
-    build: .
-    ports:
-      - "5000:5000"
-    env_file: .env
+  worker:
+    build: ./worker
+    env_file: worker/.env
+    depends_on:
+      - mongodb
     command: python3 ./app.py
+  webapp:
+    build: ./webapp
+    env_file: webapp/.env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+  mongodb:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 1234
+      MONGO_INITDB_DATABASE: ffxivttvtracker
+    ports:
+      - 27017:27017
+    volumes:
+      - db-data:/data/db
+
+volumes:
+  db-data:

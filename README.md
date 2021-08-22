@@ -1,0 +1,1 @@
+Apparently apscheduler + pytesseract + my code = memory leak :)
