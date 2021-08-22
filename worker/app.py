@@ -91,12 +91,14 @@ def periodic_job():
     last_ran = datetime.datetime.utcnow()
 
     streamers = get_streamers_from_db()
+    print(streamers)
 
-    streamer_logins = [x["user_login"] for x in streamers]
-    print("Logins", streamer_logins)
+    streamers_dict = {streamer['user_login']:streamer for streamer in streamers}
+    streams = twitch.get_streams(user_login=list(streamers_dict.keys()))['data']
 
-    streams = twitch.get_streams(user_login=streamer_logins)['data']
-    process_streams(streams)
+    streamers_to_process = [streamers_dict[stream['user_login']] for stream in streams 
+        if stream['game_name'] == GAME_NAME]
+    process_streams(streamers_to_process)
   
     global last_finished
     last_finished = datetime.datetime.utcnow()
@@ -107,21 +109,38 @@ def get_streamers_from_db():
     if not db:
         return []
 
-    return db["streamers"].find({}, {"_id": 0, "user_login": 1})
+    return list(db["streamers"].find({}, {"_id": 0, "user_login": 1, "image": 1}))
 
 
-def process_streams(streams):
-    if len(streams) > 0:
-        for stream in streams:
-            if stream['game_name'] == GAME_NAME:
+def process_streams(streamers):
+    for streamer in streamers:
+        try:
+            quest, img_file = get_quest(streamer['user_login'])
+            values = {}
+
+            if quest != None:
+                streamer_progress[streamer['user_login']] = {"quest": quest, "last_updated": datetime.datetime.utcnow()}
+                values["quest"] = quest
+
+                # Upload the image file
                 try:
-                    quest = get_quest(stream['user_login'])
-                    if quest != None:
-                        streamer_progress[stream['user_login']] = {"quest": quest, "last_updated": datetime.datetime.utcnow()}
-                        db["streamers"].find_one_and_update({"user_login": stream['user_login'].lower()}, 
-                            {"$set": {"quest": quest, "last_updated": datetime.datetime.utcnow()}})
+                    result = cloudinary.uploader.upload(img_file)
+                    if result.get('public_id') and result.get('url'):
+                        # Delete previous image from cloudinary
+                        if streamer.get('image'):
+                            cloudinary.api.delete_resources([streamer['image']['public_id']])
+
+                        values["image"] = {
+                            "public_id": result['public_id'],
+                            "url": result['url']
+                        }
                 except Exception as e:
-                    print("error", e)
+                    print("Failed to upload image", e)
+
+            values["last_updated"] = datetime.datetime.utcnow()         
+            db["streamers"].find_one_and_update({"user_login": streamer['user_login'].lower()}, {"$set": values})
+        except Exception as e:
+            print("error", e)
 
 
 def get_quest(streamer):
@@ -133,11 +152,11 @@ def get_quest(streamer):
     quest_text = match(img_rgb, MSQ_TRACKER_MATCH_VARS)
     if quest_text == None or quest_text not in QUESTS:
         quest_text = match(img_rgb, MSQ_ICON_MATCH_VARS)
-    #result = cloudinary.uploader.upload(img_file)
-    #print("result", result)
 
     if quest_text in QUESTS:
-        return QUESTS[quest_text]
+        return QUESTS[quest_text], img_file
+
+    return None, img_file
 
 
 def screenshot_stream(streamer):
@@ -229,8 +248,6 @@ def resize(image, width=None, height=None, inter=cv2.INTER_AREA):
 
 
 if __name__ == '__main__':
-    print("Started", flush=True)
     while(True):
         periodic_job()
-        time.sleep(10)
-        pass
+        time.sleep(30)
