@@ -31,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'frontend/build')));
 
 app.get("/api/streamers", async (req, res) => {
   try {
-    const streamers = await streamerModel.find({"quest" : { "$nin": [ null, "" ] }}).exec();
+    const streamers = await streamerModel.find({"quest" : { "$nin": [ null, "" ] }}).sort('user_login').exec();
     res.status(200).json({status: 'success', data: streamers});
   } catch (err) {
     res.status(404).json({status: 'fail', message: err});
