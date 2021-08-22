@@ -1,3 +1,6 @@
+import cloudinary
+import cloudinary.api
+import cloudinary.uploader
 import cv2
 import datetime
 import json
@@ -25,16 +28,16 @@ class MatchVars:
 with open('quests_formatted.json') as f:
     QUESTS = json.load(f)
 
-LOWER_RED = np.array([100, 100, 100])
+LOWER_RED = np.array([0, 50, 50])
 UPPER_RED = np.array([255, 255, 255])
 LOWER_YELLOW = np.array([15, 20, 100])
 UPPER_YELLOW = np.array([50, 255, 255])
 
-MSQ_TRACKER_TEMPLATE = cv2.imread('msq_tracker.jpg', cv2.IMREAD_UNCHANGED)
+MSQ_TRACKER_TEMPLATE = cv2.imread('msq_tracker2.jpg', cv2.IMREAD_UNCHANGED)
 MSQ_ICON_TEMPLATE = cv2.imread('msq_icon.png', cv2.IMREAD_UNCHANGED)
 
 MSQ_TRACKER_MATCH_VARS = MatchVars(MSQ_TRACKER_TEMPLATE, LOWER_RED, UPPER_RED, ((
-    MSQ_TRACKER_TEMPLATE.shape[0] + 10, 0), (MSQ_TRACKER_TEMPLATE.shape[0] + 215, MSQ_TRACKER_TEMPLATE.shape[1])))
+    MSQ_TRACKER_TEMPLATE.shape[0] + 18, -10), (MSQ_TRACKER_TEMPLATE.shape[0] + 215, MSQ_TRACKER_TEMPLATE.shape[1])))
 MSQ_ICON_MATCH_VARS = MatchVars(MSQ_ICON_TEMPLATE, LOWER_YELLOW, UPPER_YELLOW, (
     (-MSQ_ICON_TEMPLATE.shape[0] - 200, 0), (0, MSQ_ICON_TEMPLATE.shape[1])))
 
@@ -52,6 +55,7 @@ streamlink = Streamlink()
 
 is_running = False
 
+# MONGO
 global db
 try:
     # try to instantiate a client instance
@@ -74,14 +78,23 @@ except Exception as e:
 
 print("\ndatabases:", database_names)
 
+# Cloudinary
+cloudinary.config( 
+  cloud_name = os.environ['CLOUDINARY_NAME'], 
+  api_key = os.environ['CLOUDINARY_API'], 
+  api_secret = os.environ['CLOUDINARY_SECRET'] 
+)
 
 def periodic_job():
     print("Starting job", flush=True)
     global last_ran 
     last_ran = datetime.datetime.utcnow()
 
-    streamer_logins = get_streamer_logins()
+    streamers = get_streamers_from_db()
+
+    streamer_logins = [x["user_login"] for x in streamers]
     print("Logins", streamer_logins)
+
     streams = twitch.get_streams(user_login=streamer_logins)['data']
     process_streams(streams)
   
@@ -90,15 +103,11 @@ def periodic_job():
     print(streamer_progress, flush=True)
 
 
-def get_streamer_logins():
+def get_streamers_from_db():
     if not db:
         return []
 
-    streamer_logins = [x["user_login"] for x in db["streamers"].find({}, {"_id": 0, "user_login": 1})]
-    if not streamer_logins:
-        return list(streamer_progress.keys())
-
-    return streamer_logins
+    return db["streamers"].find({}, {"_id": 0, "user_login": 1})
 
 
 def process_streams(streams):
@@ -124,6 +133,8 @@ def get_quest(streamer):
     quest_text = match(img_rgb, MSQ_TRACKER_MATCH_VARS)
     if quest_text == None or quest_text not in QUESTS:
         quest_text = match(img_rgb, MSQ_ICON_MATCH_VARS)
+    #result = cloudinary.uploader.upload(img_file)
+    #print("result", result)
 
     if quest_text in QUESTS:
         return QUESTS[quest_text]
@@ -178,7 +189,7 @@ def multiscale_template_match(img, template):
     (tH, tW) = template.shape[:2]
 
     found = None
-    for scale in np.linspace(0.2, 1.0, 20)[::-1]:
+    for scale in np.linspace(0.5, 1.5, 20)[::-1]:
         resized = resize(img, width=int(img.shape[1] * scale))
         r = img.shape[1] / float(resized.shape[1])
 
