@@ -62,7 +62,7 @@ try:
     client = MongoClient(os.environ['MONGO_URI'])
 
     # print the version of MongoDB server if connection successful
-    print("server version:", client.server_info()["version"])
+    print("server version:", client.server_info()["version"], flush=True)
 
     # get the database_names from the MongoClient()
     database_names = client.list_database_names()
@@ -74,7 +74,7 @@ except Exception as e:
     database_names = []
 
     # catch pymongo.errors.ServerSelectionTimeoutError
-    print ("pymongo ERROR", e)
+    print("pymongo ERROR", e)
 
 print("\ndatabases:", database_names)
 
@@ -101,12 +101,12 @@ def periodic_job():
 
     streamers_to_process = [streamers_dict[stream['user_login']] for stream in streams 
         if stream['game_name'] == GAME_NAME]
-    print("Currently Streaming: ", [streamer['user_login'] for streamer in streamers_to_process])
+    print("Currently Streaming:", [streamer['user_login'] for streamer in streamers_to_process], flush=True)
     process_streams(streamers_to_process)
   
     global last_finished
     last_finished = datetime.datetime.utcnow()
-    print(streamer_progress, flush=True)
+    print("App state:", streamer_progress, flush=True)
 
 
 def get_streamers_from_db():
@@ -149,7 +149,7 @@ def process_streams(streamers):
        
             db["streamers"].find_one_and_update({"user_login": streamer['user_login'].lower()}, {"$set": values})
         except Exception as e:
-            print("error", e)
+            print("Error processing stream", e)
 
 
 def get_quest(streamer):
@@ -158,8 +158,11 @@ def get_quest(streamer):
     screenshot_stream(streamer)
     img_file = '{}.jpg'.format(streamer)
     img_rgb = cv2.imread(img_file, cv2.IMREAD_UNCHANGED)
+
+    print("Matching msq tracker", flush=True)
     quest_text = match(img_rgb, MSQ_TRACKER_MATCH_VARS)
     if quest_text == None or quest_text not in QUESTS:
+        print("Matching quest log", flush=True)
         quest_text = match(img_rgb, MSQ_ICON_MATCH_VARS)
 
     if quest_text in QUESTS:
@@ -170,9 +173,8 @@ def get_quest(streamer):
 
 def screenshot_stream(streamer):
     os.system('rm {}*.jpg'.format(streamer))
-    print("getting stream-url", flush=True)
+    print("Screenshotting stream", flush=True)
     m3u8 = streamlink.streams("twitch.tv/{}".format(streamer))["best"].url
-    print(m3u8, flush=True)
     ffmpeg_cmd = 'ffmpeg -i "{}" -ss 00:00:40.00 -qscale:v 2 -hide_banner -loglevel error -vframes 1 {}.jpg'.format(
         m3u8, streamer)
     print(ffmpeg_cmd, flush=True)
@@ -180,7 +182,6 @@ def screenshot_stream(streamer):
 
 
 def match(img_rgb, match_vars):
-    print("Matching icon", flush=True)
     (iH, iW) = img_rgb.shape[:2]
 
     # Isolate red colors in image and template
