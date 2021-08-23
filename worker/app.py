@@ -79,11 +79,15 @@ except Exception as e:
 print("\ndatabases:", database_names)
 
 # Cloudinary
-cloudinary.config( 
-  cloud_name = os.environ['CLOUDINARY_NAME'], 
-  api_key = os.environ['CLOUDINARY_API'], 
-  api_secret = os.environ['CLOUDINARY_SECRET'] 
-)
+try:
+    cloudinary.config( 
+        cloud_name = os.environ['CLOUDINARY_NAME'], 
+        api_key = os.environ['CLOUDINARY_API'], 
+        api_secret = os.environ['CLOUDINARY_SECRET'] 
+    )
+except Exception as e:
+    print("Error setting cloudinary", e)
+
 
 def periodic_job():
     print("Starting job", flush=True)
@@ -91,13 +95,13 @@ def periodic_job():
     last_ran = datetime.datetime.utcnow()
 
     streamers = get_streamers_from_db()
-    print(streamers)
 
     streamers_dict = {streamer['user_login']:streamer for streamer in streamers}
     streams = twitch.get_streams(user_login=list(streamers_dict.keys()))['data']
 
     streamers_to_process = [streamers_dict[stream['user_login']] for stream in streams 
         if stream['game_name'] == GAME_NAME]
+    print("Currently Streaming: ", [streamer['user_login'] for streamer in streamers_to_process])
     process_streams(streamers_to_process)
   
     global last_finished
@@ -109,18 +113,24 @@ def get_streamers_from_db():
     if not db:
         return []
 
-    return list(db["streamers"].find({}, {"_id": 0, "user_login": 1, "image": 1}))
+    return list(db["streamers"].find({}, {"_id": 0, "user_login": 1, "image": 1, "last_updated": 1}))
 
 
 def process_streams(streamers):
     for streamer in streamers:
         try:
+            # Don't process streamer for 5 minutes we successfully discovered quest
+            if streamer.get('last_updated'):
+                if datetime.datetime.utcnow() - streamer['last_updated'] < datetime.timedelta(minutes=5):
+                    continue 
+
             quest, img_file = get_quest(streamer['user_login'])
             values = {}
 
             if quest != None:
                 streamer_progress[streamer['user_login']] = {"quest": quest, "last_updated": datetime.datetime.utcnow()}
                 values["quest"] = quest
+                values["last_updated"] = datetime.datetime.utcnow()  
 
                 # Upload the image file
                 try:
@@ -136,8 +146,7 @@ def process_streams(streamers):
                         }
                 except Exception as e:
                     print("Failed to upload image", e)
-
-            values["last_updated"] = datetime.datetime.utcnow()         
+       
             db["streamers"].find_one_and_update({"user_login": streamer['user_login'].lower()}, {"$set": values})
         except Exception as e:
             print("error", e)
@@ -171,7 +180,7 @@ def screenshot_stream(streamer):
 
 
 def match(img_rgb, match_vars):
-    print("Matching msq tracker icon", flush=True)
+    print("Matching icon", flush=True)
     (iH, iW) = img_rgb.shape[:2]
 
     # Isolate red colors in image and template
