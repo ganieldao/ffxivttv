@@ -36,7 +36,6 @@ class StreamerTable extends Component {
     }
 
     createData(id, userLogin, quest, section, lastUpdated, image) {
-        console.log({ id, userLogin, quest, section, lastUpdated, image })
         return { id, userLogin, quest, section, lastUpdated, image };
     }
 
