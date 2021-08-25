@@ -49,32 +49,37 @@ class StreamerTable extends Component {
             {
                 field: 'quest',
                 headerName: 'Quest',
-                width: '500'
+                width: '400'
             },
             {
                 field: 'section',
                 headerName: 'Section',
-                width: '700'
+                width: '500'
+            },
+            {
+                field: 'image',
+                headerName: 'Screenshot',
+                width: '400',
+                renderCell: (params) => {
+                    if (params.row['image']) {
+                        var imageUrl = params.row['image']['url'];
+                        return (
+                            <a href={imageUrl} alt={params.row['lastUpdated']} style={{height: '100%'}}>
+                                <img alt={params.row['lastUpdated']} src={imageUrl} style={{maxWidth:'100%', maxHeight:'100%'}} />
+                            </a>
+                        );
+                    } else {
+                        return (
+                            <div>No Screenshot Available</div>
+                        )
+                    }
+                }
             },
             {
                 field: 'lastUpdated',
                 headerName: 'Last Updated',
                 width: '300',
-                renderCell: (params) => {
-                    var dateString = this.getLocalDateString(params.value);
-
-                    if (params.row['image']) {
-                        return (
-                            <a href={params.row['image']['url']}>
-                                {dateString}
-                            </a>
-                        );
-                    } else {
-                        return (
-                            <div>{dateString}</div>
-                        )
-                    }
-                }
+                valueGetter: (params) => this.getLocalDateString(params.value)
             }
         ]
     }
@@ -86,7 +91,8 @@ class StreamerTable extends Component {
     render() {
         return (
             <div style={{ height: '100%', width: '100%' }}>
-                <DataGrid
+                <DataGrid 
+                    rowHeight={150}
                     rows={this.state.rows}
                     columns={this.getColumns()}
                 />
