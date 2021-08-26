@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import './StreamerTable.css'
+import { Avatar } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 import arr from '../assets/images/arr.png';
 import heavensward from '../assets/images/heavensward.png';
@@ -27,7 +28,7 @@ class StreamerTable extends Component {
         var id = 1;
         streamers.forEach(streamer => {
             rows.push(this.createData(id++, streamer["user_login"], streamer["quest"]["quest"], 
-                streamer["quest"]["section"], new Date(streamer["last_updated"]), streamer["image"]));
+                streamer["quest"]["section"], new Date(streamer["last_updated"]), streamer["image"], streamer["profile_image_url"]));
         });
         this.setState({
             rows: rows
@@ -35,8 +36,8 @@ class StreamerTable extends Component {
         return rows
     }
 
-    createData(id, userLogin, quest, section, lastUpdated, image) {
-        return { id, userLogin, quest, section, lastUpdated, image };
+    createData(id, userLogin, quest, section, lastUpdated, image, profileUrl) {
+        return { id, userLogin, quest, section, lastUpdated, image, profileUrl };
     }
 
     getColumns() {
@@ -44,7 +45,22 @@ class StreamerTable extends Component {
             {
                 field: 'userLogin',
                 headerName: 'Streamer',
-                width: '200'
+                width: '200',
+                renderCell: (params) => {
+                    console.log(params.row)
+                    if (params.row['profileUrl']) {
+                        return (
+                            <div style={{display: 'flex', height: '100%', alignItems: 'center', alignContent: 'space-between'}}>
+                                <Avatar alt={params.row['userLogin']} src={params.row['profileUrl']} />
+                                <div>{params.row['userLogin']}</div>
+                            </div>
+                        );
+                    } else {
+                        return (
+                            <div>{params.row['userLogin']}</div>
+                        );
+                    }
+                }
             },
             {
                 field: 'quest',

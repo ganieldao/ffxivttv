@@ -1,3 +1,4 @@
+const TwitchApi = require("node-twitch").default;
 const express = require("express");
 const path = require('path');
 const mongoose = require('mongoose')
@@ -21,10 +22,12 @@ var streamerSchema = new mongoose.Schema({
 
 var streamerModel = mongoose.model('Streamers', streamerSchema);
 
-
+const twitch = new TwitchApi({
+	client_id: process.env.TWITCH_CLIENT_ID,
+	client_secret: process.env.TWITCH_SECRET
+});
 
 const app = express();
-
 const PORT = process.env.PORT || 8080;
 
 app.use(express.static(path.join(__dirname, 'frontend/build')));
@@ -32,9 +35,20 @@ app.use(express.static(path.join(__dirname, 'frontend/build')));
 app.get("/api/streamers", async (req, res) => {
   try {
     const streamers = await streamerModel.find({"quest" : { "$nin": [ null, "" ] }}).sort('user_login').exec();
-    res.status(200).json({status: 'success', data: streamers});
+    const streamerMap = streamers.reduce((map, streamer) => (map[streamer.user_login] = streamer.toObject(), map), {});
+  
+    if (streamers.length > 0) {
+      twitch.getUsers(Object.keys(streamerMap)).then((data) => console.log(data));
+      const twitchUsers = await twitch.getUsers(Object.keys(streamerMap));
+
+      twitchUsers.data.forEach(twitchUser => {
+        streamerMap[twitchUser["login"]]["profile_image_url"] = twitchUser["profile_image_url"];
+      });
+    }
+
+    res.status(200).json({status: 'success', data: Object.values(streamerMap)});
   } catch (err) {
-    res.status(404).json({status: 'fail', message: err});
+    res.status(404).json({status: 'fail', message: err.message + err.stack});
   }
 });
 
