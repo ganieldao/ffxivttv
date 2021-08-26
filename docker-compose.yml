@@ -6,13 +6,25 @@ services:
     depends_on:
       - mongodb
     command: python3 ./app.py
-  webapp:
-    build: ./webapp
+  backend:
     env_file: webapp/.env
+    build:
+      context: ./webapp
+      dockerfile: Dockerfile-local
     ports:
-      - "8080:8080"
+      - 8080:8080
     depends_on:
       - mongodb
+  frontend:
+    env_file: webapp/frontend/.env
+    build: ./webapp/frontend
+    ports:
+      - 3000:3000
+    volumes:
+      - './webapp/frontend:/usr/src/frontend'
+      - '/usr/src/frontend/node_modules'
+    depends_on:
+      - backend
   mongodb:
     image: mongo:latest
     restart: always
