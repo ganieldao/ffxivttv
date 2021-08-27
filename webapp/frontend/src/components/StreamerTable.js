@@ -1,11 +1,20 @@
 import { Component } from 'react'
 import './StreamerTable.css'
 import { Avatar } from '@material-ui/core';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, gridPanelClasses } from '@material-ui/data-grid';
+import { withStyles } from '@material-ui/core/styles';
 import arr from '../assets/images/arr.png';
 import heavensward from '../assets/images/heavensward.png';
 
 const SAMPLE_DATA = {"status":"success","data":[{"_id":"6119b80dab9597e7fc4a8764","user_login":"richwcampbell","last_updated":"2021-08-22T00:26:41.275Z","quest":{"index":562,"quest":"Storm on the Horizon","quest_link":"https://ffxiv.consolegameswiki.com/wiki/Storm_on_the_Horizon","level":70,"quest_giver":"Hien","giver_link":"https://ffxiv.consolegameswiki.com/wiki/Hien","unlocks":[],"subsection":"","section":"Patch 4.2 (Rise of a New Sun)"},"image":{"public_id":"wodmqj6tpjg2waijv3k0","url":"http://res.cloudinary.com/ffxivttv/image/upload/v1629671144/wodmqj6tpjg2waijv3k0.jpg"}},{"_id":"6119b80dab9597e7fc4a8765","user_login":"fextralife","quest_name":"","last_updated":"2021-08-18T02:56:31.305Z","quest":{"index":156,"quest":"Representing the Representative","quest_link":"https://ffxiv.consolegameswiki.com/wiki/Representing_the_Representative","level":42,"quest_giver":"Ceana","giver_link":"https://ffxiv.consolegameswiki.com/wiki/Ceana","unlocks":[],"subsection":"","section":"Levels 41-50"}},{"_id":"6119b80dab9597e7fc4a8766","user_login":"sloot","last_updated":"2021-08-22T00:16:09.284Z","quest":{"index":336,"quest":"New Winds, Old Friends","quest_link":"https://ffxiv.consolegameswiki.com/wiki/New_Winds,_Old_Friends","level":54,"quest_giver":"Estinien","giver_link":"https://ffxiv.consolegameswiki.com/wiki/Estinien","unlocks":[],"subsection":"","section":"Levels 54-55"}},{"_id":"6119b80dab9597e7fc4a8768","user_login":"shiphtur","last_updated":"2021-08-17T00:00:38.828Z","quest":{"index":587,"quest":"The Syrcus Trench","quest_link":"https://ffxiv.consolegameswiki.com/wiki/The_Syrcus_Trench","level":70,"quest_giver":"Tataru","giver_link":"https://ffxiv.consolegameswiki.com/wiki/Tataru","unlocks":[],"subsection":"Main Quest Chain","section":"Levels 70-71"}}]}
+
+const useStyles = theme => ({
+    streamerCell: {
+        display: 'flex',
+        width: '100%', 
+        alignItems: 'center'
+    }
+});
 
 class StreamerTable extends Component {
     constructor() {
@@ -41,6 +50,8 @@ class StreamerTable extends Component {
     }
 
     getColumns() {
+        const { classes } = this.props;
+
         return [
             {
                 field: 'userLogin',
@@ -49,9 +60,9 @@ class StreamerTable extends Component {
                 renderCell: (params) => {
                     if (params.row['profileUrl']) {
                         return (
-                            <div style={{display: 'flex', height: '100%', alignItems: 'center', alignContent: 'space-between'}}>
+                            <div className={classes.streamerCell}>
                                 <Avatar alt={params.row['userLogin']} src={params.row['profileUrl']} />
-                                <div>{params.row['userLogin']}</div>
+                                <div style={{margin: '10px'}}>{params.row['userLogin']}</div>
                             </div>
                         );
                     } else {
@@ -120,4 +131,4 @@ class StreamerTable extends Component {
     }
 }
 
-export default StreamerTable;
+export default withStyles(useStyles)(StreamerTable);
