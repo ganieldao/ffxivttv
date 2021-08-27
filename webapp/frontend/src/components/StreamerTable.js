@@ -47,7 +47,6 @@ class StreamerTable extends Component {
                 headerName: 'Streamer',
                 width: '200',
                 renderCell: (params) => {
-                    console.log(params.row)
                     if (params.row['profileUrl']) {
                         return (
                             <div style={{display: 'flex', height: '100%', alignItems: 'center', alignContent: 'space-between'}}>
@@ -95,7 +94,11 @@ class StreamerTable extends Component {
                 field: 'lastUpdated',
                 headerName: 'Last Updated',
                 width: '300',
-                valueGetter: (params) => this.getLocalDateString(params.value)
+                valueGetter: (params) => this.getLocalDateString(params.value),
+                sortComparator: (v1, v2, param1, param2) => {
+                    return param1.api.getRow(param1.id)['lastUpdated'] - 
+                        param2.api.getRow(param2.id)['lastUpdated']
+                }
             }
         ]
     }
