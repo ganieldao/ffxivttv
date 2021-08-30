@@ -1,8 +1,9 @@
 import { Component } from 'react'
 import './StreamerTable.css'
-import { Avatar } from '@material-ui/core';
-import { DataGrid, gridPanelClasses } from '@material-ui/data-grid';
+import { Avatar, Tooltip } from '@material-ui/core';
+import { DataGrid } from '@material-ui/data-grid';
 import { withStyles } from '@material-ui/core/styles';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import arr from '../assets/images/arr.png';
 import heavensward from '../assets/images/heavensward.png';
 
@@ -13,6 +14,12 @@ const useStyles = theme => ({
         display: 'flex',
         width: '100%', 
         alignItems: 'center'
+    },
+    live: {
+        color: '#4caf50',
+    },
+    notLive: {
+        color: '#666',
     }
 });
 
@@ -36,8 +43,8 @@ class StreamerTable extends Component {
         var rows = [];
         var id = 1;
         streamers.forEach(streamer => {
-            rows.push(this.createData(id++, streamer["user_login"], streamer["quest"]["quest"], 
-                streamer["quest"]["section"], new Date(streamer["last_updated"]), streamer["image"], streamer["profile_image_url"]));
+            rows.push(this.createData(id++, streamer["user_login"], streamer["quest"], 
+                new Date(streamer["last_updated"]), streamer["image"], streamer["profile_image_url"], streamer["is_live"]));
         });
         this.setState({
             rows: rows
@@ -45,8 +52,8 @@ class StreamerTable extends Component {
         return rows
     }
 
-    createData(id, userLogin, quest, section, lastUpdated, image, profileUrl) {
-        return { id, userLogin, quest, section, lastUpdated, image, profileUrl };
+    createData(id, userLogin, quest, lastUpdated, image, profileUrl, isLive) {
+        return { id, userLogin, quest, lastUpdated, image, profileUrl, isLive };
     }
 
     getColumns() {
@@ -58,11 +65,17 @@ class StreamerTable extends Component {
                 headerName: 'Streamer',
                 width: '200',
                 renderCell: (params) => {
+                    var liveStatus = params.row['isLive'] ? 'live' : 'notLive';
+                    var liveMessage = params.row['isLive'] ? 'Currently streaming FFXIV' : 'Not currently streaming FFXIV';
+                    var twitchUrl = 'https://twitch.tv/' + params.row['userLogin'];
                     if (params.row['profileUrl']) {
                         return (
                             <div className={classes.streamerCell}>
                                 <Avatar alt={params.row['userLogin']} src={params.row['profileUrl']} />
-                                <div style={{margin: '10px'}}>{params.row['userLogin']}</div>
+                                <a href={twitchUrl} target="_blank" rel="noopener noreferrer" style={{marginLeft: '10px'}}>{params.row['userLogin']}</a>
+                                <Tooltip title={liveMessage} arrow>
+                                    <FiberManualRecordIcon fontSize="small" className={classes[liveStatus]} />
+                                </Tooltip>
                             </div>
                         );
                     } else {
@@ -70,17 +83,36 @@ class StreamerTable extends Component {
                             <div>{params.row['userLogin']}</div>
                         );
                     }
+                },
+                sortComparator: (v1, v2, param1, param2) => {
+                    return param1.api.getRow(param1.id)['userLogin'].localeCompare(param2.api.getRow(param2.id)['userLogin']);
                 }
             },
             {
                 field: 'quest',
                 headerName: 'Quest',
-                width: '400'
+                width: '400',
+                renderCell: (params) => {
+                    var quest = params.row['quest']['quest'];
+                    var quest_url = params.row['quest']['quest_link'];
+                    return (
+                        <a href={quest_url} target="_blank" rel="noopener noreferrer">{quest}</a>
+                    );
+                },
+                sortComparator: (v1, v2, param1, param2) => {
+                    return param1.api.getRow(param1.id)['quest']['index'] - 
+                        param2.api.getRow(param2.id)['quest']['index'];
+                }
             },
             {
                 field: 'section',
                 headerName: 'Section',
-                width: '500'
+                width: '500',
+                valueGetter: (params) => params.row['quest']['section'],
+                sortComparator: (v1, v2, param1, param2) => {
+                    return param1.api.getRow(param1.id)['quest']['index'] - 
+                        param2.api.getRow(param2.id)['quest']['index'];
+                }
             },
             {
                 field: 'image',
@@ -90,7 +122,7 @@ class StreamerTable extends Component {
                     if (params.row['image']) {
                         var imageUrl = params.row['image']['url'];
                         return (
-                            <a href={imageUrl} alt={params.row['lastUpdated']} style={{height: '100%'}}>
+                            <a href={imageUrl} target="_blank" rel="noopener noreferrer" alt={params.row['lastUpdated']} style={{height: '100%'}}>
                                 <img alt={params.row['lastUpdated']} src={imageUrl} style={{maxWidth:'100%', maxHeight:'100%'}} />
                             </a>
                         );
