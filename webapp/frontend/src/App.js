@@ -18,7 +18,12 @@ const useStyles = makeStyles((theme) => ({
     flex: 5
   },
   container: {
-    flex: 95
+    flex: 90
+  },
+  bottom: {
+    flex: 5,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 }));
 
@@ -38,6 +43,11 @@ function App() {
       <div className={classes.container}>
         <StreamerTable/>
       </div>
+      <AppBar color="primary" position="static"  className={classes.bottom}>
+        <Typography variant='h7' align='center'>
+          Might be off by a couple quests if the streamer is in cutscenes or stalling with react content
+        </Typography>
+      </AppBar>
     </div>
   );
 }
