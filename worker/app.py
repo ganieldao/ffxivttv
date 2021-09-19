@@ -96,7 +96,7 @@ def periodic_job():
 
     streamers = get_streamers_from_db()
 
-    streamers_dict = {streamer['user_login']:streamer for streamer in streamers}
+    streamers_dict = {streamer['user_login']:streamer for streamer in streamers if 'user_login' in streamer}
     streams = twitch.get_streams(user_login=list(streamers_dict.keys()))['data']
 
     streamers_to_process = [streamers_dict[stream['user_login']] for stream in streams 
@@ -135,14 +135,14 @@ def process_streams(streamers):
                 # Upload the image file
                 try:
                     result = cloudinary.uploader.upload(img_file)
-                    if result.get('public_id') and result.get('url'):
+                    if result.get('public_id') and result.get('secure_url'):
                         # Delete previous image from cloudinary
                         if streamer.get('image'):
                             cloudinary.api.delete_resources([streamer['image']['public_id']])
 
                         values["image"] = {
                             "public_id": result['public_id'],
-                            "url": result['url']
+                            "url": result['secure_url']
                         }
                 except Exception as e:
                     print("Failed to upload image", e)
