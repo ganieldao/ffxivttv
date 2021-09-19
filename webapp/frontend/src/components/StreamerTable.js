@@ -148,6 +148,7 @@ class StreamerTable extends Component {
         return (
             <div style={{ height: '100%', width: '100%' }}>
                 <DataGrid 
+                    hideFooter
                     rowHeight={150}
                     rows={this.state.rows}
                     columns={this.getColumns()}
