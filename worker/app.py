@@ -43,6 +43,7 @@ MSQ_ICON_MATCH_VARS = MatchVars(MSQ_ICON_TEMPLATE, LOWER_YELLOW, UPPER_YELLOW, (
 
 GAME_NAME = "Final Fantasy XIV Online"
 
+# Tracking state in for logging purposes
 streamer_progress = {}
 
 last_ran = None
@@ -119,16 +120,22 @@ def get_streamers_from_db():
 def process_streams(streamers):
     for streamer in streamers:
         try:
-            # Don't process streamer for 5 minutes we successfully discovered quest
+            streamer_login = streamer['user_login']
+
+            # Don't process streamer for 5 minutes after we successfully got quest
             if streamer.get('last_updated'):
                 if datetime.datetime.utcnow() - streamer['last_updated'] < datetime.timedelta(minutes=5):
+                    print("Skipping ", streamer_login, flush=True)
                     continue 
 
-            quest, img_file = get_quest(streamer['user_login'])
+            quest, img_file = get_quest(streamer_login)
+
+            # Check if streamer is still streaming to prevent false-positives when hosting
+            still_streaming = len(twitch.get_streams(user_login=[streamer_login])['data']) > 0
             values = {}
 
-            if quest != None:
-                streamer_progress[streamer['user_login']] = {"quest": quest, "last_updated": datetime.datetime.utcnow()}
+            if quest != None and still_streaming:
+                streamer_progress[streamer_login] = {"quest": quest, "last_updated": datetime.datetime.utcnow()}
                 values["quest"] = quest
                 values["last_updated"] = datetime.datetime.utcnow()  
 
@@ -147,7 +154,7 @@ def process_streams(streamers):
                 except Exception as e:
                     print("Failed to upload image", e)
        
-            db["streamers"].find_one_and_update({"user_login": streamer['user_login'].lower()}, {"$set": values})
+                db["streamers"].find_one_and_update({"user_login": streamer_login.lower()}, {"$set": values})
         except Exception as e:
             print("Error processing stream", e)
 
