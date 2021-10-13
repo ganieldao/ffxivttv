@@ -150,6 +150,7 @@ class StreamerTable extends Component {
                 <DataGrid 
                     hideFooter
                     rowHeight={150}
+                    autoHeight
                     rows={this.state.rows}
                     columns={this.getColumns()}
                 />
