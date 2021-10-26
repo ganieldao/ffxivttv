@@ -2,13 +2,11 @@
 
 An automated FFXIV story progress tracker for TwitchTV streamers using OpenCV and Tesseract
 
-<p align="center" width="100%">
-    <img align="right" src="./screenshots/Screenshot.png" width="70%">
-</p>
+![Screenshot](./screenshots/Screenshot.png)
 
 Try it out: http://ffxivttv.herokuapp.com
 
-(The front could be sleeping due prolonged in-activity on the Heroku free-tier, so it may take a bit to wake up)
+(The frontend could be sleeping due prolonged in-activity on the Heroku free-tier, so it may take a bit to wake up)
 
 ## Local Setup
 Create .env files in worker/ and webapp/ with the following information
