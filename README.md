@@ -2,8 +2,8 @@
 
 An automated FFXIV story progress tracker for TwitchTV streamers using OpenCV and Tesseract
 
-<p align="center">
-    <img align="right" src="./screenshots/Screenshot.png" width="350">
+<p align="center" width="100%">
+    <img align="right" src="./screenshots/Screenshot.png" width="70%">
 </p>
 
 Try it out: http://ffxivttv.herokuapp.com
