@@ -16,7 +16,6 @@ services:
     depends_on:
       - mongodb
   frontend:
-    env_file: webapp/frontend/.env
     build: ./webapp/frontend
     ports:
       - 3000:3000

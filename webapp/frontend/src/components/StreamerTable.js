@@ -30,7 +30,9 @@ class StreamerTable extends Component {
         fetch("/api/streamers")
             .then(response => response.json())
             .then(json => {
-                this.updateRows(json.data)
+                if (json.data) {
+                    this.updateRows(json.data);
+                }
             });
     }
 

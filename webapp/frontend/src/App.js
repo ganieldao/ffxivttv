@@ -35,7 +35,7 @@ function App() {
       <CssBaseline />
       <AppBar color="primary" position="static" className={classes.appBar}>
         <Toolbar>
-          <Typography variant="h6">
+          <Typography variant="h5">
             FFXIV TwitchTV Tracker
           </Typography>
         </Toolbar>
@@ -44,7 +44,7 @@ function App() {
         <StreamerTable/>
       </div>
       <AppBar color="primary" position="static"  className={classes.bottom}>
-        <Typography variant='h7' align='center'>
+        <Typography variant='p' align='center'>
           Might be off by a couple quests if the streamer is in cutscenes or stalling with react content
         </Typography>
       </AppBar>
