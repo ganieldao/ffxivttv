@@ -28,6 +28,8 @@ TWITCH_CLIENT_ID=
 TWITCH_SECRET=
 ```
 
+Run `npm install` in `webapp/` and `webapp/frontend`
+
 In the root directory, run
 ```
 docker-compose up
