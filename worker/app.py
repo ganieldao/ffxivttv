@@ -130,11 +130,17 @@ def process_streams(streamers):
 
             quest, img_file = get_quest(streamer_login)
 
-            # Check if streamer is still streaming to prevent false-positives when hosting
-            still_streaming = len(twitch.get_streams(user_login=[streamer_login])['data']) > 0
+            # Check if streamer is still streaming ffxiv to prevent false-positives when hosting
+            streams = twitch.get_streams(user_login=[streamer_login])['data']
+            still_streaming = len(streams) > 0 and streams[0]['game_name'] == GAME_NAME
             values = {}
 
             if quest != None and still_streaming:
+                if streamer.get("quest"):
+                    if streamer['quest'].index > quest.index:
+                        print("Parsed quest is before last checked quest. Last: ", streamer['quest'].index, ", parsed: ", quest.index)
+                        continue
+
                 streamer_progress[streamer_login] = {"quest": quest, "last_updated": datetime.datetime.utcnow()}
                 values["quest"] = quest
                 values["last_updated"] = datetime.datetime.utcnow()  
