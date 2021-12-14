@@ -43,6 +43,14 @@ MSQ_ICON_MATCH_VARS = MatchVars(MSQ_ICON_TEMPLATE, LOWER_YELLOW, UPPER_YELLOW, (
 
 GAME_NAME = "Final Fantasy XIV Online"
 
+TO_BE_CONTINUED = "To be continued"
+COMPLETE_QUEST = { 
+    "quest": "Complete", 
+    "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Main_Scenario_Quests", 
+    "section": "Done", 
+    "index": 9000 
+}
+
 # Tracking state in for logging purposes
 streamer_progress = {}
 
@@ -168,14 +176,21 @@ def get_quest(streamer):
 
     print("Matching msq tracker", flush=True)
     quest_text = match(img_rgb, MSQ_TRACKER_MATCH_VARS)
-    if quest_text == None or quest_text not in QUESTS:
+    if not is_valid_quest_text(quest_text):
         print("Matching quest log", flush=True)
         quest_text = match(img_rgb, MSQ_ICON_MATCH_VARS)
 
-    if quest_text in QUESTS:
-        return QUESTS[quest_text], img_file
+    if quest_text is not None:
+        if quest_text in QUESTS:
+            return QUESTS[quest_text], img_file
+        elif TO_BE_CONTINUED in quest_text:
+            return COMPLETE_QUEST, img_file
 
     return None, img_file
+
+
+def is_valid_quest_text(quest_text):
+    return quest_text != None and (quest_text in QUESTS or TO_BE_CONTINUED in quest_text)
 
 
 def screenshot_stream(streamer):
