@@ -21,7 +21,9 @@ const StreamerRow = ({ index, style }) => (
     bg-white shadow rounded-lg 
     hover:bg-sky-700"
       onClick={() => questListRef.current.scrollToItem(TEST_DATA[index]["quest"]["index"])}>
-      <div className="select-none">
+      <img class="object-cover w-8 h-8 rounded-full outline outline-4 outline-green-600" 
+      src={TEST_DATA[index]["profile_image_url"]} alt="Profile image"/>
+      <div className="select-none ml-2">
         {TEST_DATA[index]["user_login"]}
       </div>
     </div>
@@ -41,7 +43,7 @@ function Home({ streamers }) {
     md:items-start md:flex-row">
       <List
         height={500}
-        itemCount={TEST_DATA.length}
+        itemCount={streamers.length}
         itemSize={80}
         width={300}
       >
