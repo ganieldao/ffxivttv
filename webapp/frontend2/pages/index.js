@@ -1,6 +1,4 @@
 import React from 'react';
-import Head from 'next/head';
-import Image from 'next/image';
 import { FixedSizeList as List } from "react-window";
 
 const QUESTS = require('../res/quests_list.json');
@@ -18,9 +16,12 @@ export async function getStaticProps(context) {
 
 const StreamerRow = ({ index, style }) => (
   <div style={style} className="flex justify-between items-center">
-    <div className="p-2 flex h-3/4 items-center w-full bg-white shadow rounded-lg hover:bg-sky-700"
+    <div className="flex items-center
+    p-2 h-3/4 w-full 
+    bg-white shadow rounded-lg 
+    hover:bg-sky-700"
       onClick={() => questListRef.current.scrollToItem(TEST_DATA[index]["quest"]["index"])}>
-      <div>
+      <div className="select-none">
         {TEST_DATA[index]["user_login"]}
       </div>
     </div>
@@ -28,14 +29,16 @@ const StreamerRow = ({ index, style }) => (
 );
 
 const Row = ({ index, style }) => (
-  <div style={style}>
+  <div style={style} className="select-none">
     {QUESTS[index]["quest"]}
   </div>
 );
 
 function Home({ streamers }) {
   return (
-    <div className="min-h-screen w-screen bg-gray-200 flex flex-col pt-20 justify-center items-center md:items-start md:flex-row">
+    <div className="flex flex-col justify-center items-center 
+    pt-20 min-h-screen w-screen bg-gray-200 
+    md:items-start md:flex-row">
       <List
         height={500}
         itemCount={TEST_DATA.length}
