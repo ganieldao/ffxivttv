@@ -11,6 +11,7 @@
     "next": "12.0.7",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-table": "^7.7.0",
     "react-virtualized-auto-sizer": "^1.0.6",
     "react-window": "^1.8.6"
   },
