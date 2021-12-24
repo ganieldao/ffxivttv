@@ -1,8 +1,13 @@
 import React from 'react';
+import Image from 'next/image'
 import { FixedSizeList as List } from "react-window";
 
 const QUESTS = require('../res/quests_list.json');
 const TEST_DATA = require('../res/test_data.json')['data'];
+
+function getQuestTypeIcon(questType) {
+  return './' + questType + '.png';
+}
 
 export async function getStaticProps(context) {
   return {
@@ -62,9 +67,21 @@ function QuestList({ quests, selectedQuestIndex }) {
 
   const QuestRow = ({ index, style }) => (
     <div style={style} className={"flex select-none items-center " + (index == selectedQuestIndex ? "bg-green-100" : "")}>
-      <label className="ml-2">
+      <div className="flex w-full items-center justify-between ml-2">
         {QUESTS[index]["quest"]}
-      </label>
+        <div className="flex">
+        {
+          QUESTS[index]["unlocks"].map(unlock => {
+            return (
+              <div>
+                {"type" in unlock ? 
+                  <img className="w-5 h-5 mr-1" title={unlock["unlock"]} src={getQuestTypeIcon(unlock["type"])}></img> : null}
+              </div>
+            );
+          })
+        }
+        </div>
+      </div>
     </div>
   );
 

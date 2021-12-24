@@ -1,12 +1,29 @@
 import requests
 import json
 from bs4 import BeautifulSoup
+from requests.api import get
 
 BASE_URL = "https://ffxiv.consolegameswiki.com"
 URL = BASE_URL + "/wiki/Main_Scenario_Quests"
 page = requests.get(URL)
 
 soup = BeautifulSoup(page.content, "html.parser")
+
+def get_unlock_type(url):
+    if "Achievement" in url:
+        return "achievement"
+    elif "Dungeon" in url:
+        return "dungeon"
+    elif "Trial" in url:
+        return "trial"
+    elif "Mount_speed" in url:
+        return "mount"
+    elif "Aether_current" in url:
+        return "aether"
+    elif "Location" in url:
+        return "location"
+    else:
+        return None
 
 results = soup.find_all(['h3', 'table'])
 
@@ -26,8 +43,19 @@ for result in results:
             cells = row.find_all('td')
             if len(cells) == 5:
                 unlocks = []
-                for unlock in cells[4].find_all('a', recursive=False):
-                    unlocks.append(unlock.get_text())
+
+                unlock_obj = {}
+                for unlock in cells[4].find_all(['a','div'], recursive=False):
+                    img_tag = unlock.find('img')
+                    if img_tag:
+                        unlock_type = get_unlock_type(img_tag['src'])
+                        if unlock_type:
+                            unlock_obj['type'] = unlock_type
+                    else:
+                        unlock_obj['unlock'] = unlock.get_text()
+                        unlocks.append(unlock_obj)
+                        unlock_obj = {}
+
                 quest_link = row.find('a')
                 quest = quest_link.getText().rstrip()
                 link = BASE_URL + quest_link['href']
