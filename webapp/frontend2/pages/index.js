@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image'
 import { FixedSizeList as List } from "react-window";
 
 const QUESTS = require('../res/quests_list.json');
@@ -17,15 +16,15 @@ export async function getStaticProps(context) {
   }
 }
 
-function StreamerList({ setSelectedQuestIndex }) {
+function StreamerList({ streamers, setSelectedQuestIndex }) {
   const StreamerRow = ({ index, style }) => (
     <div style={style} className="flex justify-between items-center p-2 bg-gray-100">
       <div className="flex items-center p-2 h-full w-full bg-white shadow rounded-lg select-none hover:bg-sky-100"
-        onClick={() => setSelectedQuestIndex(TEST_DATA[index]["quest"]["index"])}>
+        onClick={() => setSelectedQuestIndex(streamers[index]["quest"]["index"])}>
         <img className="object-cover w-8 h-8 rounded-full outline outline-4 outline-green-600"
-          src={TEST_DATA[index]["profile_image_url"]} alt="Profile image" />
+          src={streamers[index]["profile_image_url"]} alt="Profile image" />
         <div className="ml-2">
-          {TEST_DATA[index]["user_login"]}
+          {streamers[index]["user_login"]}
         </div>
       </div>
     </div>
@@ -45,7 +44,7 @@ function StreamerList({ setSelectedQuestIndex }) {
       </label>
       <List
         height={500}
-        itemCount={TEST_DATA.length}
+        itemCount={streamers.length}
         itemSize={80}
         width={250}
       >
@@ -55,9 +54,11 @@ function StreamerList({ setSelectedQuestIndex }) {
   );
 }
 
-function QuestList({ quests, selectedQuestIndex, key }) {
+function QuestList({ quests, selectedQuestIndex }) {
+  // Create refs for each quest, total is the quest index of the last quest in the last section
   const rowRefs = React.useRef(new Array(quests.at(-1)["quests"].at(-1)["index"]));
 
+  // Scroll to selected quest
   React.useEffect(() => {
     if (selectedQuestIndex >= 0 && selectedQuestIndex < rowRefs.current.length) {
       rowRefs.current[selectedQuestIndex].scrollIntoView({ block: "center" });
@@ -67,16 +68,16 @@ function QuestList({ quests, selectedQuestIndex, key }) {
   function QuestTable({ section, rowRefs }) {
     const section_quests = section["quests"];
 
-    const QuestRow = React.memo(({ quest, rowRef, index }) => (
-      <div key={index} ref={rowRef} className={"flex select-none items-center "}>
+    const QuestRow = React.memo(({ quest, rowRef }) => (
+      <div ref={rowRef} className={"flex select-none items-center "}>
         <div className="flex w-full items-center justify-between ml-2">
           {quest["quest"]}
           {console.log('render')}
           <div className="flex">
             {
-              quest["unlocks"].map(unlock => {
+              quest["unlocks"].map((unlock,i) => {
                 return (
-                  <div>
+                  <div key={"unlock" + quest["index"] + "_" + i}>
                     {"type" in unlock ?
                       <img className="w-5 h-5 mr-1" title={unlock["unlock"]} src={getQuestTypeIcon(unlock["type"])}></img> : null}
                   </div>
@@ -90,9 +91,9 @@ function QuestList({ quests, selectedQuestIndex, key }) {
 
     return (
       <div>
-        <div key={key} className="sticky top-0 shadow-md bg-blue-300">{section["section"]}</div>
+        <div className="sticky top-0 shadow-md bg-blue-300">{section["section"]}</div>
         {section_quests.map((x, i) => {
-          return (<QuestRow quest={x} index={i} rowRef={el => rowRefs.current[x["index"]] = el} />)
+          return (<QuestRow key={"questRow" + x["index"]} quest={x} rowRef={el => rowRefs.current[x["index"]] = el} />)
         })}
       </div>
     );
@@ -101,7 +102,7 @@ function QuestList({ quests, selectedQuestIndex, key }) {
   return (
     <div className="h-96 overflow-y-scroll">
       {quests.map((x, i) =>
-        <QuestTable key={i} section={x} rowRefs={rowRefs} />
+        <QuestTable key={"questTable" + i} section={x} rowRefs={rowRefs} />
       )}
     </div>
   );
@@ -112,7 +113,7 @@ function Home({ streamers }) {
 
   return (
     <div className="flex flex-col justify-center items-center pt-20 min-h-screen w-screen bg-white md:items-start md:flex-row">
-      <StreamerList setSelectedQuestIndex={setSelectedQuestIndex} />
+      <StreamerList streamers={streamers} setSelectedQuestIndex={setSelectedQuestIndex} />
       <QuestList quests={QUESTS} selectedQuestIndex={selectedQuestIndex} />
     </div>
   )
