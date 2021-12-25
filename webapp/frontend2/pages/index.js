@@ -124,7 +124,7 @@ function QuestList2({ quests, selectedQuestIndex }) {
 
     return (
       <div>
-        <div>{section["section"]}</div>
+        <div className="sticky top-0 shadow-md bg-blue-300">{section["section"]}</div>
         {section_quests.map((x, i) =>
           <QuestRow quest={x} index={i} />
         )}
@@ -133,7 +133,7 @@ function QuestList2({ quests, selectedQuestIndex }) {
   }
 
   return (
-    <div className="h-screen overflow-scroll">
+    <div className="h-screen overflow-y-scroll">
       {quests.map((x, i) =>
         <QuestTable section={x} />
       )}
