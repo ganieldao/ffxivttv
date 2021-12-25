@@ -9,32 +9,38 @@ page = requests.get(URL)
 
 soup = BeautifulSoup(page.content, "html.parser")
 
+UNLOCK_TYPES = {
+    "Achievement": "achievement",
+    "Dungeon": "dungeon",
+    "Trial": "trial",
+    "Mount_speed": "mount",
+    "Aether_current": "aether",
+    "Location": "location"
+}
+
 def get_unlock_type(url):
-    if "Achievement" in url:
-        return "achievement"
-    elif "Dungeon" in url:
-        return "dungeon"
-    elif "Trial" in url:
-        return "trial"
-    elif "Mount_speed" in url:
-        return "mount"
-    elif "Aether_current" in url:
-        return "aether"
-    elif "Location" in url:
-        return "location"
-    else:
-        return None
+    for key in UNLOCK_TYPES.keys():
+        if key in url:
+            return UNLOCK_TYPES[key]
+    return None
 
 results = soup.find_all(['h3', 'table'])
+print(results)
 
 quest_index = 0
 quests_dict = {}
 quests_arr = []
 
 curr_section = ''
+curr_section_obj = {}
 for result in results:
     if result.name == 'h3':
         curr_section = result.getText().rstrip()
+        curr_section_obj = {
+            "section": curr_section,
+            "quests": []
+        }
+        quests_arr.append(curr_section_obj)
     elif result.name == 'table':
         rows = result.find_all('tr')
         # Ignore header row
@@ -67,7 +73,7 @@ for result in results:
                     "unlocks": unlocks
                 }
                 quests_dict[quest] = quest_obj
-                quests_arr.append(quest_obj)
+                curr_section_obj["quests"].append(quest_obj)
                 quest_index += 1
                 
 def write(file, obj):
