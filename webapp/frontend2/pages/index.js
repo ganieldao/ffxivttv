@@ -54,6 +54,39 @@ function StreamerList({ streamers, setSelectedQuestIndex }) {
   );
 }
 
+const QuestRow = ({ quest, rowRef, selectedQuestIndex }) => (
+  <div ref={rowRef} className={"flex select-none items-center " + (selectedQuestIndex == quest["index"] ? "bg-blue-100" : "")}>
+    <div className="flex w-full items-center justify-between ml-2">
+      {quest["quest"]}
+      <div className="flex">
+        {
+          quest["unlocks"].map((unlock, i) => {
+            return (
+              <div key={"unlock" + quest["index"] + "_" + i}>
+                {"type" in unlock ?
+                  <img className="w-5 h-5 mr-1" title={unlock["unlock"]} src={getQuestTypeIcon(unlock["type"])}></img> : null}
+              </div>
+            );
+          })
+        }
+      </div>
+    </div>
+  </div>
+);
+
+function QuestTable({ section, rowRefs, selectedQuestIndex }) {
+  const section_quests = section["quests"];
+
+  return (
+    <div>
+      <div className="sticky top-0 shadow-md bg-blue-300">{section["section"]}</div>
+      {section_quests.map((x, i) => {
+        return <QuestRow key={"questRow" + x["index"]} quest={x} rowRef={el => rowRefs.current[x["index"]] = el} selectedQuestIndex={selectedQuestIndex} />
+      })}
+    </div>
+  );
+}
+
 function QuestList({ quests, selectedQuestIndex }) {
   // Create refs for each quest, total is the quest index of the last quest in the last section
   const rowRefs = React.useRef(new Array(quests.at(-1)["quests"].at(-1)["index"]));
@@ -61,48 +94,14 @@ function QuestList({ quests, selectedQuestIndex }) {
   // Scroll to selected quest
   React.useEffect(() => {
     if (selectedQuestIndex >= 0 && selectedQuestIndex < rowRefs.current.length) {
-      rowRefs.current[selectedQuestIndex].scrollIntoView({ block: "center" });
+      rowRefs.current[selectedQuestIndex].scrollIntoView({ behavior: 'smooth', block: "center" });
     }
   }, [selectedQuestIndex]);
-
-  function QuestTable({ section, rowRefs }) {
-    const section_quests = section["quests"];
-
-    const QuestRow = React.memo(({ quest, rowRef }) => (
-      <div ref={rowRef} className={"flex select-none items-center "}>
-        <div className="flex w-full items-center justify-between ml-2">
-          {quest["quest"]}
-          {console.log('render')}
-          <div className="flex">
-            {
-              quest["unlocks"].map((unlock,i) => {
-                return (
-                  <div key={"unlock" + quest["index"] + "_" + i}>
-                    {"type" in unlock ?
-                      <img className="w-5 h-5 mr-1" title={unlock["unlock"]} src={getQuestTypeIcon(unlock["type"])}></img> : null}
-                  </div>
-                );
-              })
-            }
-          </div>
-        </div>
-      </div>
-    ));
-
-    return (
-      <div>
-        <div className="sticky top-0 shadow-md bg-blue-300">{section["section"]}</div>
-        {section_quests.map((x, i) => {
-          return (<QuestRow key={"questRow" + x["index"]} quest={x} rowRef={el => rowRefs.current[x["index"]] = el} />)
-        })}
-      </div>
-    );
-  }
 
   return (
     <div className="h-96 overflow-y-scroll">
       {quests.map((x, i) =>
-        <QuestTable key={"questTable" + i} section={x} rowRefs={rowRefs} />
+        <QuestTable key={"questTable" + i} section={x} rowRefs={rowRefs} selectedQuestIndex={selectedQuestIndex} />
       )}
     </div>
   );
