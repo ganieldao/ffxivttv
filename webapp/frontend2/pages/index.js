@@ -31,7 +31,7 @@ function StreamerList({ streamers, setSelectedQuestIndex }) {
   );
 
   return (
-    <div className="flex flex-col px-5 pb-5 pt-3 bg-gray-100 rounded-lg shadow gap-2">
+    <div className="flex flex-col px-5 pb-5 pt-3 gap-2 bg-gray-100 rounded-lg shadow">
       <h1 className="text-xl font-semibold">Streamers</h1>
       { /* Sort selection */}
       <label>
@@ -79,7 +79,7 @@ function QuestTable({ section, rowRefs, selectedQuestIndex }) {
 
   return (
     <div>
-      <div className="sticky top-0 shadow-md bg-blue-300">{section["section"]}</div>
+      <div className="sticky top-0 shadow-md text-sm p-1 font-semibold bg-blue-300">{section["section"]}</div>
       {section_quests.map((x, i) => {
         return <QuestRow key={"questRow" + x["index"]} quest={x} rowRef={el => rowRefs.current[x["index"]] = el} selectedQuestIndex={selectedQuestIndex} />
       })}
@@ -93,16 +93,23 @@ function QuestList({ quests, selectedQuestIndex }) {
 
   // Scroll to selected quest
   React.useEffect(() => {
+    const selectedQuest = rowRefs.current[0]
     if (selectedQuestIndex >= 0 && selectedQuestIndex < rowRefs.current.length) {
-      rowRefs.current[selectedQuestIndex].scrollIntoView({ behavior: 'smooth', block: "center" });
+      selectedQuest = rowRefs.current[selectedQuestIndex]
+    } else if (selectedQuestIndex >= rowRefs.current.length) {
+      selectedQuest = rowRefs.current.at(-1);
     }
+    selectedQuest.scrollIntoView({ behavior: 'smooth', block: "center" });
   }, [selectedQuestIndex]);
 
   return (
-    <div className="h-96 overflow-y-scroll">
-      {quests.map((x, i) =>
-        <QuestTable key={"questTable" + i} section={x} rowRefs={rowRefs} selectedQuestIndex={selectedQuestIndex} />
-      )}
+    <div className="flex flex-col px-5 pb-5 pt-3 h-96 gap-2 bg-gray-100 rounded-lg shadow">
+      <h1 className="text-xl font-semibold">Main Scenario Quests</h1>
+      <div className="overflow-y-scroll">
+        {quests.map((x, i) =>
+          <QuestTable key={"questTable" + i} section={x} rowRefs={rowRefs} selectedQuestIndex={selectedQuestIndex} />
+        )}
+      </div>
     </div>
   );
 };

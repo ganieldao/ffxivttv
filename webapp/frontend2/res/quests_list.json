@@ -7486,5 +7486,15 @@
                 ]
             }
         ]
+    },
+    {
+        "section": "To be continued",
+        "quests": [
+            {
+                "quest": "To be continued",
+                "index": 9000,
+                "unlocks": []
+            }
+        ]
     }
 ]
