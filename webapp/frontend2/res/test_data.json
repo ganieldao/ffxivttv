@@ -2,21 +2,183 @@
     "status": "success",
     "data": [
         {
+            "_id": "61241e4815b42ddb4c2d8303",
+            "user_login": "savix",
+            "image": {
+                "public_id": "pxc0gwn18pgbc6nqkw8g",
+                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640552683/pxc0gwn18pgbc6nqkw8g.jpg"
+            },
+            "last_updated": "2021-12-26T21:04:43.293Z",
+            "quest": {
+                "quest": "Complete",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Main_Scenario_Quests",
+                "section": "Done",
+                "index": 9000
+            },
+            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/1b07ba78-01fc-4608-acb8-63a69b74dcf2-profile_image-300x300.png",
+            "is_live": true
+        },
+        {
+            "_id": "6119c441ab9597e7fc4a8778",
+            "user_login": "sloot",
+            "quest": {
+                "quest": "Complete",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Main_Scenario_Quests",
+                "section": "Done",
+                "index": 9000
+            },
+            "last_updated": "2021-12-26T21:02:32.397Z",
+            "image": {
+                "public_id": "qjqql3ieoe053ydxcynk",
+                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640552552/qjqql3ieoe053ydxcynk.jpg"
+            },
+            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/51248e85-c8e0-4570-a111-d3a95052b5a8-profile_image-300x300.png",
+            "is_live": true
+        },
+        {
+            "_id": "61b8fe71d82669ce721af327",
+            "user_login": "jessecox",
+            "image": {
+                "public_id": "zappxsogyblkvsexopkc",
+                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640551843/zappxsogyblkvsexopkc.jpg"
+            },
+            "last_updated": "2021-12-26T20:50:43.759Z",
+            "quest": {
+                "quest": "Unto the Heavens",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Unto_the_Heavens",
+                "section": "Levels 88-90",
+                "index": 843
+            },
+            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/jessecox-profile_image-5f318bb87c5e4882-300x300.png",
+            "is_live": true
+        },
+        {
+            "_id": "6122918e3bea31fb6dd86d1d",
+            "user_login": "cohhcarnage",
+            "last_updated": "2021-12-26T19:24:43.557Z",
+            "image": {
+                "public_id": "pyrpmtgitvtywwysglrs",
+                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640546683/pyrpmtgitvtywwysglrs.jpg"
+            },
+            "quest": {
+                "quest": "Unto the Heavens",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Unto_the_Heavens",
+                "section": "Levels 88-90",
+                "index": 843
+            },
+            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/e3a58ce0-46ea-4558-8bb0-7a967c1d621c-profile_image-300x300.png"
+        },
+        {
+            "_id": "61bb86400dd8cb9daa34ba6a",
+            "user_login": "nobbel87",
+            "image": {
+                "public_id": "vukngupopk2aglq8lql5",
+                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640536992/vukngupopk2aglq8lql5.jpg"
+            },
+            "last_updated": "2021-12-26T16:43:12.055Z",
+            "quest": {
+                "quest": "Still Waters",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Still_Waters",
+                "section": "Patch 2.2 (Through the Maelstrom)",
+                "index": 221
+            },
+            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/nobbel87-profile_image-92afb1b8ce924c5f-300x300.png"
+        },
+        {
+            "_id": "61b786b863f4c56a4cc6754a",
+            "user_login": "donjohnent",
+            "image": {
+                "public_id": "khavg10j6wsgjujyydpc",
+                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640521502/khavg10j6wsgjujyydpc.jpg"
+            },
+            "last_updated": "2021-12-26T12:25:02.938Z",
+            "quest": {
+                "quest": "The Gifted",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/The_Gifted",
+                "section": "Patch 2.1 (A Realm Awoken)",
+                "index": 219
+            },
+            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/c4966668-cf9c-43f4-badf-c51b05e62cbb-profile_image-300x300.png"
+        },
+        {
+            "_id": "612e2caa0a1a4ac87f6cfad1",
+            "user_login": "sebbywebztv",
+            "image": {
+                "public_id": "niaaxy9sndr1mjpsgoku",
+                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640510709/niaaxy9sndr1mjpsgoku.jpg"
+            },
+            "last_updated": "2021-12-26T09:25:09.446Z",
+            "quest": {
+                "quest": "At World's End",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/At_World%27s_End",
+                "section": "Levels 84-85",
+                "index": 809
+            },
+            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/35881dad-b32c-4202-909f-c9733aa14403-profile_image-300x300.png"
+        },
+        {
+            "_id": "6119c441ab9597e7fc4a8775",
+            "user_login": "potasticp",
+            "quest": {
+                "quest": "Stormblood",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Stormblood_(Quest)",
+                "section": "Levels 68-70",
+                "index": 550
+            },
+            "last_updated": "2021-12-26T02:44:29.784Z",
+            "image": {
+                "public_id": "viavuqpusvsjlksoegc7",
+                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640486669/viavuqpusvsjlksoegc7.jpg"
+            },
+            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/f07ad3f0-4d84-4525-8e34-586065dcdec2-profile_image-300x300.png"
+        },
+        {
+            "_id": "61607d2ddf080e66ca4ba7af",
+            "user_login": "pyromancer",
+            "image": {
+                "public_id": "axdo31yk6vxgojpvjbru",
+                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640391076/axdo31yk6vxgojpvjbru.jpg"
+            },
+            "last_updated": "2021-12-25T00:11:16.701Z",
+            "quest": {
+                "quest": "Into the Wood",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Into_the_Wood",
+                "section": "Levels 74-75",
+                "index": 645
+            },
+            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/5f831b18-ef59-4609-ba5d-0f80b2b36919-profile_image-300x300.png"
+        },
+        {
+            "_id": "6119c441ab9597e7fc4a8776",
+            "user_login": "richwcampbell",
+            "quest": {
+                "quest": "A Boy's Errand",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/A_Boy%27s_Errand",
+                "section": "Levels 80-81",
+                "index": 756
+            },
+            "last_updated": "2021-12-23T20:50:25.302Z",
+            "image": {
+                "public_id": "cp8wcednmrwf1mmd1ijw",
+                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640292625/cp8wcednmrwf1mmd1ijw.jpg"
+            },
+            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/b4fbeb77-2433-4151-85a3-475106e0bcb5-profile_image-300x300.png"
+        },
+        {
             "_id": "611baf2762349e354152a683",
             "user_login": "anniefuchsia",
             "image": {
-                "public_id": "yse4ms8aglqtfmj6skim",
-                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640280724/yse4ms8aglqtfmj6skim.jpg"
+                "public_id": "aaser2v9g2ekf8sarowg",
+                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640286615/aaser2v9g2ekf8sarowg.jpg"
             },
-            "last_updated": "2021-12-23T17:32:03.960Z",
+            "last_updated": "2021-12-23T19:10:15.440Z",
             "quest": {
                 "quest": "Etched in the Stars",
                 "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Etched_in_the_Stars",
                 "section": "Patch 5.3 (Reflections in Crystal)",
                 "index": 722
             },
-            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/d79a29b370bdab50-profile_image-300x300.jpeg",
-            "is_live": true
+            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/d79a29b370bdab50-profile_image-300x300.jpeg"
         },
         {
             "_id": "612c370d9ac7dd010d48c220",
@@ -35,87 +197,6 @@
             "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/93da2c04-1ed1-4271-8db7-563bfced2b0f-profile_image-300x300.png"
         },
         {
-            "_id": "61b8fe71d82669ce721af327",
-            "user_login": "jessecox",
-            "image": {
-                "public_id": "owzgtycso0vhjoialwtx",
-                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640219265/owzgtycso0vhjoialwtx.jpg"
-            },
-            "last_updated": "2021-12-23T00:27:45.517Z",
-            "quest": {
-                "quest": "Worthy of His Back",
-                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Worthy_of_His_Back",
-                "section": "Levels 86-87",
-                "index": 823
-            },
-            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/jessecox-profile_image-5f318bb87c5e4882-300x300.png"
-        },
-        {
-            "_id": "6119c441ab9597e7fc4a8778",
-            "user_login": "sloot",
-            "quest": {
-                "quest": "Complete",
-                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Main_Scenario_Quests",
-                "section": "Done",
-                "index": 9000
-            },
-            "last_updated": "2021-12-22T23:34:01.990Z",
-            "image": {
-                "public_id": "vdqx3dpwdhpevsctxf5e",
-                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640216042/vdqx3dpwdhpevsctxf5e.jpg"
-            },
-            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/51248e85-c8e0-4570-a111-d3a95052b5a8-profile_image-300x300.png"
-        },
-        {
-            "_id": "61bb86400dd8cb9daa34ba6a",
-            "user_login": "nobbel87",
-            "image": {
-                "public_id": "m4nf7qjy2kkocta6mirb",
-                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640212341/m4nf7qjy2kkocta6mirb.jpg"
-            },
-            "last_updated": "2021-12-22T22:32:21.098Z",
-            "quest": {
-                "quest": "Moving On",
-                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Moving_On",
-                "section": "Patch 2.1 (A Realm Awoken)",
-                "index": 212
-            },
-            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/nobbel87-profile_image-92afb1b8ce924c5f-300x300.png"
-        },
-        {
-            "_id": "6119c441ab9597e7fc4a8776",
-            "user_login": "richwcampbell",
-            "quest": {
-                "quest": "Hitting the Books",
-                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Hitting_the_Books",
-                "section": "Levels 80-81",
-                "index": 750
-            },
-            "last_updated": "2021-12-22T21:13:06.908Z",
-            "image": {
-                "public_id": "h1p0kny9gvmtaijz2t3r",
-                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640207586/h1p0kny9gvmtaijz2t3r.jpg"
-            },
-            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/b4fbeb77-2433-4151-85a3-475106e0bcb5-profile_image-300x300.png",
-            "is_live": true
-        },
-        {
-            "_id": "61b786b863f4c56a4cc6754a",
-            "user_login": "donjohnent",
-            "image": {
-                "public_id": "lw8s0id9cbubvketzh0u",
-                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640198656/lw8s0id9cbubvketzh0u.jpg"
-            },
-            "last_updated": "2021-12-22T18:44:16.727Z",
-            "quest": {
-                "quest": "Moving On",
-                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Moving_On",
-                "section": "Patch 2.1 (A Realm Awoken)",
-                "index": 212
-            },
-            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/cfc72f4f-7e57-4729-bc31-ae81e2c4f9ae-profile_image-300x300.png"
-        },
-        {
             "_id": "61b7869d63f4c56a4cc67549",
             "user_login": "captaingrim_",
             "image": {
@@ -129,40 +210,7 @@
                 "section": "Patch 5.5 (Death Unto Dawn - Part 1)",
                 "index": 744
             },
-            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/e08e4924-faf6-4101-9981-22c8d0c50f56-profile_image-300x300.png",
-            "is_live": true
-        },
-        {
-            "_id": "612e2caa0a1a4ac87f6cfad1",
-            "user_login": "sebbywebztv",
-            "image": {
-                "public_id": "hcmxh24q85jz54sxhyrh",
-                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640163676/hcmxh24q85jz54sxhyrh.jpg"
-            },
-            "last_updated": "2021-12-22T09:01:16.819Z",
-            "quest": {
-                "quest": "Returning Home",
-                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Returning_Home",
-                "section": "Levels 84-85",
-                "index": 799
-            },
-            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/35881dad-b32c-4202-909f-c9733aa14403-profile_image-300x300.png"
-        },
-        {
-            "_id": "61607d2ddf080e66ca4ba7af",
-            "user_login": "pyromancer",
-            "image": {
-                "public_id": "qsac6m8hr7xbt0sdqxn7",
-                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640139687/qsac6m8hr7xbt0sdqxn7.jpg"
-            },
-            "last_updated": "2021-12-22T02:21:27.050Z",
-            "quest": {
-                "quest": "A Party Soon Divided",
-                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/A_Party_Soon_Divided",
-                "section": "Levels 74-75",
-                "index": 634
-            },
-            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/5f831b18-ef59-4609-ba5d-0f80b2b36919-profile_image-300x300.png"
+            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/e08e4924-faf6-4101-9981-22c8d0c50f56-profile_image-300x300.png"
         },
         {
             "_id": "612e2c240a1a4ac87f6cfacf",
@@ -181,38 +229,6 @@
             "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/0c092828-0bd6-4d17-bf51-fad8864b0995-profile_image-300x300.png"
         },
         {
-            "_id": "6122918e3bea31fb6dd86d1d",
-            "user_login": "cohhcarnage",
-            "last_updated": "2021-12-21T19:55:07.390Z",
-            "image": {
-                "public_id": "d91rp5emmjz1abnf5ydv",
-                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640116507/d91rp5emmjz1abnf5ydv.jpg"
-            },
-            "quest": {
-                "quest": "Once Forged",
-                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Once_Forged",
-                "section": "Levels 88-90",
-                "index": 838
-            },
-            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/e3a58ce0-46ea-4558-8bb0-7a967c1d621c-profile_image-300x300.png"
-        },
-        {
-            "_id": "61241e4815b42ddb4c2d8303",
-            "user_login": "savix",
-            "image": {
-                "public_id": "v1j9y8bydymb9zkky4go",
-                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640050294/v1j9y8bydymb9zkky4go.jpg"
-            },
-            "last_updated": "2021-12-21T01:31:34.529Z",
-            "quest": {
-                "quest": "Her Children, One and All",
-                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Her_Children,_One_and_All",
-                "section": "Levels 88-90",
-                "index": 840
-            },
-            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/1b07ba78-01fc-4608-acb8-63a69b74dcf2-profile_image-300x300.png"
-        },
-        {
             "_id": "6119c441ab9597e7fc4a8777",
             "user_login": "fextralife",
             "quest": {
@@ -227,22 +243,6 @@
                 "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1640050051/wrhmcrjuwygddmhg1zml.jpg"
             },
             "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/a28b0d37-81d0-415a-8ed8-1a1f998ea26d-profile_image-300x300.png"
-        },
-        {
-            "_id": "6119c441ab9597e7fc4a8775",
-            "user_login": "potasticp",
-            "quest": {
-                "quest": "The Price of Freedom",
-                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/The_Price_of_Freedom",
-                "section": "Levels 68-70",
-                "index": 541
-            },
-            "last_updated": "2021-12-18T03:00:32.214Z",
-            "image": {
-                "public_id": "egt2l6g6xlkcrpkqgbmb",
-                "url": "https://res.cloudinary.com/ffxivttv/image/upload/v1639796432/egt2l6g6xlkcrpkqgbmb.jpg"
-            },
-            "profile_image_url": "https://static-cdn.jtvnw.net/jtv_user_pictures/f07ad3f0-4d84-4525-8e34-586065dcdec2-profile_image-300x300.png"
         },
         {
             "_id": "6119c441ab9597e7fc4a877b",
