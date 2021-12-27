@@ -30,7 +30,7 @@ const StreamerRow = ({ streamer, setSelectedQuestIndex }) => (
   <li className={"flex justify-between items-center p-2 bg-gray-100"}>
     <div className={"flex items-center p-2 h-full w-full shadow rounded-lg select-none hover:bg-sky-100 " + getRowColor(streamer["quest"]["index"], QUEST_ROW_COLORS)} 
       onClick={() => setSelectedQuestIndex(streamer["quest"]["index"])}>
-      <img className="object-cover w-8 h-8 rounded-full outline outline-4 outline-green-600"
+      <img className={"object-cover w-8 h-8 rounded-full outline outline-4 " + (streamer["is_live"] ? "outline-green-500" : "outline-gray-500")}
         src={streamer["profile_image_url"]} alt="Profile image" />
       <div className="ml-2">
         {streamer["user_login"]}
@@ -62,7 +62,7 @@ function StreamerList({ streamers, setSelectedQuestIndex }) {
 const QuestRow = ({ quest, rowRef, selectedQuestIndex }) => (
   <li ref={rowRef} className={"flex select-none items-center " + getRowColor(quest["index"], QUEST_ROW_COLORS) + (selectedQuestIndex == quest["index"] ? " bg-opacity-90" : "")}>
     <div className="flex w-full items-center justify-between ml-2">
-      {quest["quest"]}
+      <h1>{quest["quest"]}</h1>
       <div className="flex">
         {
           quest["unlocks"].map((unlock, i) => {
