@@ -2,10 +2,9 @@ import React from 'react';
 
 const QUESTS = require('../res/quests_list.json');
 const TEST_DATA = require('../res/test_data.json')['data'];
-
-function getQuestTypeIcon(questType) {
-  return './' + questType + '.png';
-}
+const EXPANSION_START_INDICES = [856, 748, 591, 429, 291, 0] // TBC, EW, ShB, SB, HW, ARR
+const QUEST_ROW_COLORS = ["bg-green-200", "bg-gray-200", "bg-purple-200", "bg-red-200", "bg-blue-200", "bg-yellow-100"]
+const SECTION_ROW_COLORS = ["bg-green-300", "bg-gray-300", "bg-purple-300", "bg-red-300", "bg-blue-300", "bg-yellow-200"]
 
 export async function getStaticProps(context) {
   return {
@@ -15,9 +14,21 @@ export async function getStaticProps(context) {
   }
 }
 
+function getRowColor(rowIndex, rowColors) {
+  for (let i = 0; i < EXPANSION_START_INDICES.length; i ++) {
+    if (rowIndex >= EXPANSION_START_INDICES[i]) {
+      return rowColors[i];
+    }
+  }
+}
+
+function getQuestTypeIcon(questType) {
+  return './' + questType + '.png';
+}
+
 const StreamerRow = ({ streamer, setSelectedQuestIndex }) => (
-  <li className="flex justify-between items-center p-2 bg-gray-100">
-    <div className="flex items-center p-2 h-full w-full bg-white shadow rounded-lg select-none hover:bg-sky-100"
+  <li className={"flex justify-between items-center p-2 bg-gray-100"}>
+    <div className={"flex items-center p-2 h-full w-full shadow rounded-lg select-none hover:bg-sky-100 " + getRowColor(streamer["quest"]["index"], QUEST_ROW_COLORS)} 
       onClick={() => setSelectedQuestIndex(streamer["quest"]["index"])}>
       <img className="object-cover w-8 h-8 rounded-full outline outline-4 outline-green-600"
         src={streamer["profile_image_url"]} alt="Profile image" />
@@ -30,7 +41,7 @@ const StreamerRow = ({ streamer, setSelectedQuestIndex }) => (
 
 function StreamerList({ streamers, setSelectedQuestIndex }) {
   return (
-    <div className="flex flex-col h-5/6 px-5 pb-5 pt-3 gap-2 bg-gray-100 rounded-lg shadow">
+    <div className="flex flex-col w-1/6 h-5/6 px-5 pb-5 pt-3 gap-2 bg-gray-100 rounded-lg shadow">
       <h1 className="text-xl font-semibold">Streamers</h1>
       { /* Sort selection */}
       <label>
@@ -49,7 +60,7 @@ function StreamerList({ streamers, setSelectedQuestIndex }) {
 }
 
 const QuestRow = ({ quest, rowRef, selectedQuestIndex }) => (
-  <li ref={rowRef} className={"flex select-none items-center " + (selectedQuestIndex == quest["index"] ? "bg-blue-100" : "")}>
+  <li ref={rowRef} className={"flex select-none items-center " + getRowColor(quest["index"], QUEST_ROW_COLORS) + (selectedQuestIndex == quest["index"] ? " bg-opacity-90" : "")}>
     <div className="flex w-full items-center justify-between ml-2">
       {quest["quest"]}
       <div className="flex">
@@ -72,9 +83,9 @@ function QuestTable({ section, rowRefs, selectedQuestIndex }) {
   const section_quests = section["quests"];
 
   return (
-    <li className="list-none">
+    <li className="list-none bg-black">
       <ul>
-        <li className="sticky top-0 shadow-md text-sm p-1 font-semibold bg-blue-300">{section["section"]}</li>
+        <li className={"sticky top-0 shadow-md text-sm p-1 font-semibold border border-slate-900 " + getRowColor(section_quests[0]["index"], SECTION_ROW_COLORS)}>{section["section"]}</li>
         {section_quests.map((x, i) => {
           return <QuestRow key={"questRow" + x["index"]} quest={x} rowRef={el => rowRefs.current[x["index"]] = el} selectedQuestIndex={selectedQuestIndex} />
         })}
