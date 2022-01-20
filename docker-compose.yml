@@ -16,11 +16,11 @@ services:
     depends_on:
       - mongodb
   frontend:
-    build: ./webapp/frontend
+    build: ./webapp/frontend2
     ports:
       - 3000:3000
     volumes:
-      - './webapp/frontend:/usr/src/frontend'
+      - './webapp/frontend2:/usr/src/frontend'
       - '/usr/src/frontend/node_modules'
     depends_on:
       - backend
