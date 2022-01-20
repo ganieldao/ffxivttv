@@ -110,7 +110,7 @@ function QuestTable({ section, rowRefs, selectedQuestIndex }) {
 
 function QuestList({ quests, selectedQuestIndex }) {
   // Create refs for each quest, total is the quest index of the last quest in the last section
-  const rowRefs = React.useRef(new Array(quests.at(-1)["quests"].at(-1)["index"]));
+  const rowRefs = React.useRef(new Array(quests.slice(-1)[0]["quests"].slice(-1)[0]["index"]));
 
   // Scroll to selected quest
   React.useEffect(() => {
@@ -118,7 +118,7 @@ function QuestList({ quests, selectedQuestIndex }) {
     if (selectedQuestIndex >= 0 && selectedQuestIndex < rowRefs.current.length) {
       selectedQuest = rowRefs.current[selectedQuestIndex]
     } else if (selectedQuestIndex >= rowRefs.current.length) {
-      selectedQuest = rowRefs.current.at(-1);
+      selectedQuest = rowRefs.current.slice(-1)[0];
     }
     selectedQuest.scrollIntoView({ behavior: 'smooth', block: "center" });
   }, [selectedQuestIndex]);
