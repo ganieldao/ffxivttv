@@ -13,21 +13,22 @@ const StreamerRow = ({ streamer, index, onStreamerSelect, isSelected }) => {
         <div className={"flex items-center p-2 h-full w-full shadow rounded-lg select-none border-2 hover:bg-opacity-40 " + getRowColor(streamer["quest"]["index"], QUEST_ROW_COLORS) + " " + getOutline(isSelected)} 
             onClick={() => onStreamerSelect(index)}>
             <img className={"object-cover w-8 h-8 rounded-full outline outline-4 " + (streamer["is_live"] ? "outline-green-500" : "outline-gray-500")}
-            src={streamer["profile_image_url"]} alt="Profile image" />
+                src={streamer["profile_image_url"]} alt="Profile image" />
             <div className="ml-2">
-            {streamer["user_login"]}
+                {streamer["user_login"]}
             </div>
         </div>
         </li>
     )
 }
 
-function StreamerList({ streamers, setSelectedQuestIndex }) {
+function StreamerList({ streamers, setSelectedQuestIndex, setSelectedStreamer }) {
     const [selectedStreamerIndex, setSelectedStreamerIndex] = React.useState(-1);
 
     const onStreamerSelect = (streamerIndex) => {
         setSelectedQuestIndex(streamers[streamerIndex]["quest"]["index"]);
         setSelectedStreamerIndex(streamerIndex);
+        setSelectedStreamer(streamers[streamerIndex]);
     };
 
     return (

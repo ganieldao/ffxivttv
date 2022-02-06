@@ -17,13 +17,14 @@ export async function getStaticProps(context) {
 
 function Home({ streamers }) {
   const [selectedQuestIndex, setSelectedQuestIndex] = React.useState(-1);
+  const [selectedStreamer, setSelectedStreamer] = React.useState({});
 
   return (
     <div className="flex flex-col justify-center items-center gap-10 pt-20 h-screen w-screen bg-white md:items-start md:flex-row">
-      <StreamerList streamers={streamers} setSelectedQuestIndex={setSelectedQuestIndex} />
-      <div>
+      <StreamerList streamers={streamers} setSelectedQuestIndex={setSelectedQuestIndex} setSelectedStreamer={setSelectedStreamer} />
+      <div className="flex flex-col gap-5">
         <QuestList quests={QUESTS} selectedQuestIndex={selectedQuestIndex} />
-        <ScreenContainer />
+        <ScreenContainer selectedStreamer={selectedStreamer} />
       </div>
     </div>
   )
