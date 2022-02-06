@@ -8,9 +8,14 @@ const QUESTS = require('../res/quests_list.json');
 const TEST_DATA = require('../res/test_data.json')['data'];
 
 export async function getStaticProps(context) {
+  // const apiBaseUrl = process.env.NODE_ENV === "production" ? "http://localhost:8080/" : "http:/backend:8080/";
+
+  const response = await fetch("http://backend:8080/api/streamers");
+  const responseData = await response.json()
+
   return {
     props: {
-      streamers: TEST_DATA
+      streamers: responseData.data
     },
   }
 }
