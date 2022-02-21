@@ -48,7 +48,7 @@ function QuestList({ quests, selectedQuestIndex }) {
 
   // Scroll to selected quest
   React.useEffect(() => {
-    const selectedQuest = rowRefs.current[0]
+    let selectedQuest = rowRefs.current[0]
     if (selectedQuestIndex >= 0 && selectedQuestIndex < rowRefs.current.length) {
       selectedQuest = rowRefs.current[selectedQuestIndex]
     } else if (selectedQuestIndex >= rowRefs.current.length) {
