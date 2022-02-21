@@ -4,10 +4,16 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 module.exports = {
     output: {
         path: path.join(__dirname, '/dist'),
-        filename: 'index.bundle.js'
+        filename: 'index.bundle.js',
     },
     devServer: {
         port: 3000,
+        proxy: {
+            '/api': {
+                 target: 'http://localhost:3000',
+                 router: () => 'http://backend:8080',
+            }
+         }
     },
     watchOptions: {
         aggregateTimeout: 500, // delay before reloading
@@ -20,12 +26,16 @@ module.exports = {
                 exclude: /nodeModules/,
                 use: {
                     loader: 'babel-loader'
-                }
+                },
             },
             {
                 test: /\.css$/,
-                use: ['style-loader', 'css-loader', 'postcss-loader']
-            }
+                use: ['style-loader', 'css-loader', 'postcss-loader'],
+            },
+            {
+                test: /\.png$/,
+                use: 'file-loader',
+            },
         ]
     },
     plugins: [new HtmlWebpackPlugin({ template: './src/index.html' })],

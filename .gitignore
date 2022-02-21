@@ -8,6 +8,7 @@
 
 **/node_modules
 **/.pnp
+**/dist
 .pnp.js
 
 **/coverage
