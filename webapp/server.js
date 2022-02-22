@@ -32,7 +32,7 @@ const twitch = new TwitchApi({
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.use(express.static(path.join(__dirname, '/frontend2/dist')));
+app.use(express.static(path.join(__dirname, '/frontend/dist')));
 
 app.get("/api/streamers", async (req, res) => {
   try {
@@ -67,7 +67,7 @@ app.get("/api/streamers", async (req, res) => {
 });
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '/frontend2/dist/index.html'));
+  res.sendFile(path.join(__dirname, '/frontend/dist/index.html'));
 });
 
 app.listen(PORT, function() {

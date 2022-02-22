@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-RUN cd frontend2 && npm run build
+RUN cd frontend && npm run build
 
 EXPOSE $PORT
 CMD [ "npm", "start" ]
