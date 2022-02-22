@@ -8,7 +8,6 @@ services:
     command: python3 ./app.py
   webapp:
     build: ./webapp
-    build: ./webapp
     env_file: webapp/.env
     ports:
       - "8080:8080"

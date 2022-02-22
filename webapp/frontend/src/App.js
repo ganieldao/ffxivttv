@@ -1,55 +1,35 @@
+import React from "react";
 import './App.css';
-import React from 'react';
-import { 
-  AppBar, 
-  CssBaseline, 
-  Toolbar, 
-  Typography 
-} from "@material-ui/core";
-import { makeStyles } from '@material-ui/core/styles';
-import StreamerTable from './components/StreamerTable';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  appBar: {
-    flex: 5
-  },
-  container: {
-    flex: 90
-  },
-  bottom: {
-    flex: 5,
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-}));
+import QuestList from "./components/questlist/QuestList";
+import StreamerList from './components/streamerlist/StreamerList';
+import ScreenContainer from './components/screencontainer/ScreenContainer';
+
+const QUESTS = require('./res/quests_list.json');
+const TEST_DATA = require('./res/test_data.json')['data'];
 
 function App() {
-  const classes = useStyles();
+  const [selectedQuestIndex, setSelectedQuestIndex] = React.useState(-1);
+  const [selectedStreamer, setSelectedStreamer] = React.useState({});
+  const [streamers, setStreamers] = React.useState([])
+
+  React.useEffect(() => {
+    fetch("/api/streamers")
+      .then(results => results.json())
+      .then(data => {
+        setStreamers(data.data);
+      });
+  }, []);
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar color="primary" position="static" className={classes.appBar}>
-        <Toolbar>
-          <Typography variant="h5">
-            FFXIV TwitchTV Tracker
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <div className={classes.container}>
-        <StreamerTable/>
+    <div className="flex flex-col justify-center items-center gap-10 pt-20 h-screen w-screen bg-white md:items-start md:flex-row">
+      <StreamerList streamers={streamers} setSelectedQuestIndex={setSelectedQuestIndex} setSelectedStreamer={setSelectedStreamer} />
+      <div className="flex flex-col gap-5">
+        <QuestList quests={QUESTS} selectedQuestIndex={selectedQuestIndex} />
+        <ScreenContainer selectedStreamer={selectedStreamer} />
       </div>
-      <AppBar color="primary" position="static"  className={classes.bottom}>
-        <Typography variant='p' align='center'>
-          Might be off by a couple quests if the streamer is in cutscenes or stalling with react content
-        </Typography>
-      </AppBar>
     </div>
-  );
+  )
 }
 
 export default App;

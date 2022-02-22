@@ -1,4 +1,4 @@
-FROM node:10
+FROM node:17
 
 WORKDIR /usr/src/frontend
 
@@ -9,4 +9,5 @@ RUN npm install
 COPY . .
 
 EXPOSE $PORT
+
 CMD [ "npm", "start" ]

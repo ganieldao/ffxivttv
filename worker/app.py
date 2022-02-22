@@ -45,9 +45,9 @@ GAME_NAME = "Final Fantasy XIV Online"
 
 TO_BE_CONTINUED = "To be continued"
 COMPLETE_QUEST = { 
-    "quest": "Complete", 
+    "quest": "To be continued", 
     "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Main_Scenario_Quests", 
-    "section": "Done", 
+    "section": "To be continued", 
     "index": 9000 
 }
 
