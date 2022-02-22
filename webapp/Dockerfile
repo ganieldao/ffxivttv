@@ -1,4 +1,4 @@
-FROM node:10
+FROM node:16
 
 WORKDIR /usr/src/webapp
 
@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-RUN cd frontend && npm run build
+RUN cd frontend2 && npm run build
 
 EXPOSE $PORT
 CMD [ "npm", "start" ]
