@@ -22,7 +22,8 @@ function App() {
   }, []);
 
   return (
-    <div className="flex flex-col justify-center items-center gap-10 pt-20 h-screen w-screen bg-white md:items-start md:flex-row">
+    <div className="flex flex-col justify-start items-center pt-10 gap-10 h-screen w-screen bg-white 
+        md:flex-row md:justify-center md:items-start md:pt-20 md:h-screen">
       <StreamerList streamers={streamers} setSelectedQuestIndex={setSelectedQuestIndex} setSelectedStreamer={setSelectedStreamer} />
       <div className="flex flex-col gap-5">
         <QuestList quests={QUESTS} selectedQuestIndex={selectedQuestIndex} />

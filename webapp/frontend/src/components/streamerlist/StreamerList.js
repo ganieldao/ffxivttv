@@ -32,7 +32,7 @@ function StreamerList({ streamers, setSelectedQuestIndex, setSelectedStreamer })
     };
 
     return (
-        <div className="flex flex-col w-1/6 h-5/6 px-5 pb-5 pt-3 gap-2 min-w-max bg-gray-100 rounded-lg shadow">
+        <div className="flex flex-col w-1/6 h-3/6 px-5 pb-5 pt-3 gap-2 min-w-max bg-gray-100 rounded-lg shadow md:h-5/6">
             <h1 className="text-xl font-semibold">Streamers</h1>
             { /* Sort selection */}
             <label>
