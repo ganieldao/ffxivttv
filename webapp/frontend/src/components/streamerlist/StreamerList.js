@@ -27,14 +27,14 @@ function compareProgress(first, second) {
 }
 
 function compareUpdated(first, second) {
-    return (new Date(first["last_updated"]) - new Date(second["last_updated"])) || 0;
+    return (new Date(second["last_updated"]) - new Date(first["last_updated"])) || 0;
 }
 
-const StreamerRow = ({ streamer, index, onStreamerSelect, isSelected }) => {
+const StreamerRow = ({ streamer, index, onStreamerRowSelect, isSelected }) => {
     return (
         <li className={"flex justify-between items-center p-2 bg-gray-100"}>
             <div className={"flex items-center p-2 h-full w-full shadow rounded-lg select-none border-2 hover:bg-opacity-40 " + getRowColor(streamer["quest"]["index"], QUEST_ROW_COLORS) + " " + getOutline(isSelected)} 
-                onClick={() => onStreamerSelect(index)}>
+                onClick={() => onStreamerRowSelect(index, streamer)}>
                 <img className={"object-cover w-8 h-8 rounded-full outline outline-4 " + (streamer["is_live"] ? "outline-green-500" : "outline-gray-500")}
                     src={streamer["profile_image_url"]} alt="Profile image" />
                 <div className="ml-2">
@@ -46,14 +46,14 @@ const StreamerRow = ({ streamer, index, onStreamerSelect, isSelected }) => {
 }
 
 function StreamerList({ streamers, setSelectedQuestIndex, setSelectedStreamer }) {
-    const [selectedStreamerIndex, setSelectedStreamerIndex] = React.useState(-1);
+    const [highlightedStreamer, setHighlightedStreamer] = React.useState({});
     const [data, setData] = React.useState([]);
     const [sortByIndex, setSortByIndex] = React.useState(0);
 
-    const onStreamerSelect = (streamerIndex) => {
-        setSelectedQuestIndex(streamers[streamerIndex]["quest"]["index"]);
-        setSelectedStreamerIndex(streamerIndex);
-        setSelectedStreamer(streamers[streamerIndex]);
+    const onStreamerRowSelect = (index, streamer) => {
+        setSelectedQuestIndex(streamer["quest"]["index"]);
+        setHighlightedStreamer(streamer);
+        setSelectedStreamer(streamer);
     };
 
     React.useEffect(() => {
@@ -74,7 +74,7 @@ function StreamerList({ streamers, setSelectedQuestIndex, setSelectedStreamer })
                 </select>
             </label>
             <ul className="overflow-y-scroll">
-                {data.map((x, i) => <StreamerRow key={"streamerRow" + i} streamer={x} index={i} onStreamerSelect={onStreamerSelect} isSelected={i == selectedStreamerIndex} />) }
+                {data.map((x, i) => <StreamerRow key={"streamerRow" + i} streamer={x} index={i} onStreamerRowSelect={onStreamerRowSelect} isSelected={x == highlightedStreamer} />) }
             </ul>
         </div>
     );
