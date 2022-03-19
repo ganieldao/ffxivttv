@@ -31,12 +31,15 @@ function compareUpdated(first, second) {
 }
 
 const StreamerRow = ({ streamer, index, onStreamerRowSelect, isSelected }) => {
+    let twitchUrl = 'https://twitch.tv/' + streamer['user_login'];
     return (
         <li className={"flex justify-between items-center p-2 bg-gray-100"}>
             <div className={"flex items-center p-2 h-full w-full shadow rounded-lg select-none border-2 hover:bg-opacity-40 " + getRowColor(streamer["quest"]["index"], QUEST_ROW_COLORS) + " " + getOutline(isSelected)} 
                 onClick={() => onStreamerRowSelect(index, streamer)}>
-                <img className={"object-cover w-8 h-8 rounded-full outline outline-4 " + (streamer["is_live"] ? "outline-green-500" : "outline-gray-500")}
-                    src={streamer["profile_image_url"]} alt="Profile image" />
+                <a title={twitchUrl} href={twitchUrl} target="_blank" rel="noopener noreferrer">
+                    <img className={"object-cover w-8 h-8 rounded-full outline outline-4 " + (streamer["is_live"] ? "outline-green-500" : "outline-gray-500")}
+                        src={streamer["profile_image_url"]} alt="Profile image" />
+                </a>
                 <div className="ml-2">
                     {streamer["user_login"]}
                 </div>
