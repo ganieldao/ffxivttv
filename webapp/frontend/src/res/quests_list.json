@@ -1413,7 +1413,7 @@
             },
             {
                 "quest": "Blood for Blood",
-                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Blood_for_Blood_(Quest)",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Blood_for_Blood",
                 "section": "Levels 31-40",
                 "index": 176,
                 "unlocks": []
@@ -1672,12 +1672,7 @@
                 "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Operation_Archon",
                 "section": "Levels 41-50",
                 "index": 206,
-                "unlocks": [
-                    {
-                        "type": "trial",
-                        "unlock": "Cape Westwind"
-                    }
-                ]
+                "unlocks": []
             },
             {
                 "quest": "A Hero in Need",
@@ -1714,6 +1709,10 @@
                     {
                         "type": "dungeon",
                         "unlock": "The Praetorium"
+                    },
+                    {
+                        "type": "trial",
+                        "unlock": "The Porta Decumana"
                     },
                     {
                         "type": "achievement",
@@ -4722,7 +4721,7 @@
             },
             {
                 "quest": "The Measure of His Reach",
-                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/The_Measure_of_His_Reach_(Quest)",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/The_Measure_of_His_Reach",
                 "section": "Levels 68-70",
                 "index": 549,
                 "unlocks": []
@@ -5323,6 +5322,9 @@
                     {
                         "type": "achievement",
                         "unlock": "Between Two Worlds"
+                    },
+                    {
+                        "unlock": "Shadowbringers Role Quests"
                     }
                 ]
             }
@@ -7369,14 +7371,14 @@
                 "unlocks": []
             },
             {
-                "quest": "A Str\u03b1nge New World",
+                "quest": "A §trαnge New World",
                 "quest_link": "https://ffxiv.consolegameswiki.com/wiki/A_%C2%A7tr%CE%B1nge_New_World",
                 "section": "Levels 88-90",
                 "index": 844,
                 "unlocks": []
             },
             {
-                "quest": "On Burd\u03b5ned \u03c9ings",
+                "quest": "On Burdεned ωings",
                 "quest_link": "https://ffxiv.consolegameswiki.com/wiki/On_Burd%CE%B5ned_%CF%89ings",
                 "section": "Levels 88-90",
                 "index": 845,
@@ -7388,14 +7390,14 @@
                 ]
             },
             {
-                "quest": "A Test of W\u03b9ll",
+                "quest": "A Test of Wιll",
                 "quest_link": "https://ffxiv.consolegameswiki.com/wiki/A_Test_of_W%CE%B9ll",
                 "section": "Levels 88-90",
                 "index": 846,
                 "unlocks": []
             },
             {
-                "quest": "Roads P\u03b1ved\u2502\u2502Sacri\u2523ice",
+                "quest": "Roads Pαved││Sacri┣ice",
                 "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Roads_P%CE%B1ved%E2%94%82%E2%94%82Sacri%E2%94%A3ice",
                 "section": "Levels 88-90",
                 "index": 847,
@@ -7407,21 +7409,21 @@
                 ]
             },
             {
-                "quest": "F//\u03b5sh Aban\u0394on\u2528\u0394",
+                "quest": "F//εsh AbanΔon┨Δ",
                 "quest_link": "https://ffxiv.consolegameswiki.com/wiki/F//%CE%B5sh_Aban%CE%94on%E2%94%A8%CE%94",
                 "section": "Levels 88-90",
                 "index": 848,
                 "unlocks": []
             },
             {
-                "quest": "Where Kn\u221ewledge Leads",
+                "quest": "Where Kn∞wledge Leads",
                 "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Where_Kn%E2%88%9Ewledge_Leads",
                 "section": "Levels 88-90",
                 "index": 849,
                 "unlocks": []
             },
             {
-                "quest": "Vic\u2528\u03bfry \u0308 \u0308 \u0308\u2573, \u2502\u0306\u2502\u2502\u03b5 Lost",
+                "quest": "Vic┨οry ̈ ̈ ̈╳, │̆││ε Lost",
                 "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Vic%E2%94%A8%CE%BFry_%CC%88_%CC%88_%CC%88%E2%95%B3,_%E2%94%82%CC%86%E2%94%82%E2%94%82%CE%B5_Lost",
                 "section": "Levels 88-90",
                 "index": 850,
@@ -7433,7 +7435,7 @@
                 ]
             },
             {
-                "quest": "\u2523\u2528\u0308//\u0308 No\u2528\u03a6oun\u0394\u2022\u2022\u2022",
+                "quest": "┣┨̈//̈ No┨ΦounΔ•••",
                 "quest_link": "https://ffxiv.consolegameswiki.com/wiki/%E2%94%A3%E2%94%A8%CC%88//%CC%88_No%E2%94%A8%CE%A6oun%CE%94%E2%80%A2%E2%80%A2%E2%80%A2",
                 "section": "Levels 88-90",
                 "index": 851,
@@ -7484,6 +7486,86 @@
                         "unlock": "That Its Chorus Might Ring for All"
                     }
                 ]
+            }
+        ]
+    },
+    {
+        "section": "Patch 6.1 (Newfound Adventure)",
+        "quests": [
+            {
+                "quest": "Newfound Adventure",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Newfound_Adventure",
+                "section": "Patch 6.1 (Newfound Adventure)",
+                "index": 856,
+                "unlocks": []
+            },
+            {
+                "quest": "Bountiful Ruins",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Bountiful_Ruins",
+                "section": "Patch 6.1 (Newfound Adventure)",
+                "index": 857,
+                "unlocks": []
+            },
+            {
+                "quest": "Friends for the Road",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Friends_for_the_Road",
+                "section": "Patch 6.1 (Newfound Adventure)",
+                "index": 858,
+                "unlocks": []
+            },
+            {
+                "quest": "Alzadaal's Legacy",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Alzadaal%27s_Legacy_(Quest)",
+                "section": "Patch 6.1 (Newfound Adventure)",
+                "index": 859,
+                "unlocks": [
+                    {
+                        "type": "dungeon",
+                        "unlock": "Alzadaal's Legacy (Dungeon)"
+                    }
+                ]
+            },
+            {
+                "quest": "A Brother's Grief",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/A_Brother%27s_Grief",
+                "section": "Patch 6.1 (Newfound Adventure)",
+                "index": 860,
+                "unlocks": []
+            },
+            {
+                "quest": "Sharing the Wealth",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Sharing_the_Wealth",
+                "section": "Patch 6.1 (Newfound Adventure)",
+                "index": 861,
+                "unlocks": []
+            },
+            {
+                "quest": "Bridging the Rift",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Bridging_the_Rift",
+                "section": "Patch 6.1 (Newfound Adventure)",
+                "index": 862,
+                "unlocks": []
+            },
+            {
+                "quest": "Restricted Reading",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Restricted_Reading",
+                "section": "Patch 6.1 (Newfound Adventure)",
+                "index": 863,
+                "unlocks": []
+            },
+            {
+                "quest": "Void Theory",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Void_Theory",
+                "section": "Patch 6.1 (Newfound Adventure)",
+                "index": 864,
+                "unlocks": []
+            },
+            {
+                "quest": "A Satrap's Duty",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/A_Satrap%27s_Duty",
+                "section": "Patch 6.1 (Newfound Adventure)",
+                "index": 865,
+                "unlocks": []
             }
         ]
     },
