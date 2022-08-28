@@ -578,7 +578,7 @@
                 "unlocks": [
                     {
                         "type": "dungeon",
-                        "unlock": "Tam-Tara Deepcroft"
+                        "unlock": "The Tam-Tara Deepcroft"
                     }
                 ]
             },
@@ -602,7 +602,7 @@
                 ]
             },
             {
-                "quest": "The Scions of the Seventh Dawn (Quest)",
+                "quest": "The Scions of the Seventh Dawn",
                 "quest_link": "https://ffxiv.consolegameswiki.com/wiki/The_Scions_of_the_Seventh_Dawn_(Quest)",
                 "section": "Levels 15-20",
                 "index": 75,
@@ -692,7 +692,11 @@
                 "quest_link": "https://ffxiv.consolegameswiki.com/wiki/The_Company_You_Keep_(Immortal_Flames)",
                 "section": "Levels 15-20",
                 "index": 86,
-                "unlocks": []
+                "unlocks": [
+                    {
+                        "unlock": "The Immortal Flames"
+                    }
+                ]
             },
             {
                 "quest": "For Coin and Country",
@@ -710,7 +714,11 @@
                 "quest_link": "https://ffxiv.consolegameswiki.com/wiki/The_Company_You_Keep_(Maelstrom)",
                 "section": "Levels 15-20",
                 "index": 88,
-                "unlocks": []
+                "unlocks": [
+                    {
+                        "unlock": "The Maelstrom"
+                    }
+                ]
             },
             {
                 "quest": "Till Sea Swallows All",
@@ -728,7 +736,11 @@
                 "quest_link": "https://ffxiv.consolegameswiki.com/wiki/The_Company_You_Keep_(Twin_Adder)",
                 "section": "Levels 15-20",
                 "index": 90,
-                "unlocks": []
+                "unlocks": [
+                    {
+                        "unlock": "The Order of the Twin Adder"
+                    }
+                ]
             },
             {
                 "quest": "Wood's Will Be Done",
@@ -2308,12 +2320,7 @@
                 "quest_link": "https://ffxiv.consolegameswiki.com/wiki/The_Steps_of_Faith_(Quest)",
                 "section": "Patch 2.55 (Before the Fall - Part 2)",
                 "index": 281,
-                "unlocks": [
-                    {
-                        "type": "trial",
-                        "unlock": "The Steps of Faith"
-                    }
-                ]
+                "unlocks": []
             },
             {
                 "quest": "Administrative Decision",
@@ -2344,8 +2351,8 @@
                 "unlocks": []
             },
             {
-                "quest": "The Least Among Us",
-                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/The_Least_Among_Us",
+                "quest": "The Least among Us",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/The_Least_among_Us",
                 "section": "Patch 2.55 (Before the Fall - Part 2)",
                 "index": 286,
                 "unlocks": []
@@ -6857,7 +6864,7 @@
             },
             {
                 "quest": "Sea of Sorrows",
-                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Sea_of_Sorrows",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Sea_of_Sorrow",
                 "section": "Levels 82-83",
                 "index": 788,
                 "unlocks": []
@@ -6874,7 +6881,7 @@
                     },
                     {
                         "type": "achievement",
-                        "unlock": "Rise up Through the Night"
+                        "unlock": "Rise Up Through the Night"
                     }
                 ]
             }
@@ -7521,7 +7528,7 @@
                 "unlocks": [
                     {
                         "type": "dungeon",
-                        "unlock": "Alzadaal's Legacy (Dungeon)"
+                        "unlock": "Alzadaal's Legacy (Duty)"
                     }
                 ]
             },
@@ -7565,7 +7572,95 @@
                 "quest_link": "https://ffxiv.consolegameswiki.com/wiki/A_Satrap%27s_Duty",
                 "section": "Patch 6.1 (Newfound Adventure)",
                 "index": 865,
+                "unlocks": [
+                    {
+                        "type": "achievement",
+                        "unlock": "Newfound Adventure (achievement)"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "section": "Patch 6.2 (Buried Memory)",
+        "quests": [
+            {
+                "quest": "In Search of Azdaja",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/In_Search_of_Azdaja",
+                "section": "Patch 6.2 (Buried Memory)",
+                "index": 866,
+                "unlocks": [
+                    {
+                        "type": "dungeon",
+                        "unlock": "The Fell Court of Troia (Duty)"
+                    }
+                ]
+            },
+            {
+                "quest": "Shadowed Remnants",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Shadowed_Remnants",
+                "section": "Patch 6.2 (Buried Memory)",
+                "index": 867,
                 "unlocks": []
+            },
+            {
+                "quest": "Where Everything Begins",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Where_Everything_Begins",
+                "section": "Patch 6.2 (Buried Memory)",
+                "index": 868,
+                "unlocks": []
+            },
+            {
+                "quest": "Groping in the Dark",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Groping_in_the_Dark",
+                "section": "Patch 6.2 (Buried Memory)",
+                "index": 869,
+                "unlocks": []
+            },
+            {
+                "quest": "Nowhere to Run",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Nowhere_to_Run",
+                "section": "Patch 6.2 (Buried Memory)",
+                "index": 870,
+                "unlocks": []
+            },
+            {
+                "quest": "The Wind Rises",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/The_Wind_Rises",
+                "section": "Patch 6.2 (Buried Memory)",
+                "index": 871,
+                "unlocks": [
+                    {
+                        "type": "trial",
+                        "unlock": "Storm's Crown"
+                    }
+                ]
+            },
+            {
+                "quest": "Return from the Void",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Return_from_the_Void",
+                "section": "Patch 6.2 (Buried Memory)",
+                "index": 872,
+                "unlocks": []
+            },
+            {
+                "quest": "A World with Light and Life",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/A_World_with_Light_and_Life",
+                "section": "Patch 6.2 (Buried Memory)",
+                "index": 873,
+                "unlocks": []
+            },
+            {
+                "quest": "Buried Memory",
+                "quest_link": "https://ffxiv.consolegameswiki.com/wiki/Buried_Memory",
+                "section": "Patch 6.2 (Buried Memory)",
+                "index": 874,
+                "unlocks": [
+                    {
+                        "type": "achievement",
+                        "unlock": "Into the Light"
+                    }
+                ]
             }
         ]
     },
