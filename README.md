@@ -4,9 +4,7 @@ An automated FFXIV story progress tracker for TwitchTV streamers using OpenCV an
 
 ![Screenshot](./screenshots/Screenshot.png)
 
-Try it out: http://ffxivttv.herokuapp.com
-
-(The frontend could be sleeping due prolonged in-activity on the Heroku free-tier, so it may take a bit to wake up)
+Try it out: https://ffxivttv.fly.dev
 
 ## Local Setup
 Create .env files in worker/ and webapp/ with the following information
