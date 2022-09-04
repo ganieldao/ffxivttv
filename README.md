@@ -2,9 +2,9 @@
 
 An automated FFXIV story progress tracker for TwitchTV streamers using OpenCV and Tesseract
 
-![Screenshot](./screenshots/Screenshot.png)
-
 Try it out: https://ffxivttv.fly.dev
+
+![Screenshot](./screenshots/Screenshot.png)
 
 ## Local Setup
 Create .env files in worker/ and webapp/ with the following information
